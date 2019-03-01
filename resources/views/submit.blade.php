@@ -14,7 +14,6 @@
                         <div class="form-group">
                             <label for="url">Clip URL</label>
                             <p class="text-muted">Paste the full URL to a Twitch Clip.</p>
-                            <p class="warning">If the clip is tagged with a game other than Fortnite, it will be rejected.</p>
                             <input class="form-control" id="url" name="url" type="url" required>
                             @if ($errors->has('url'))
                                 <span class="invalid-feedback" role="alert">

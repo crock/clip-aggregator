@@ -4,18 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Thumbnail extends Model
+class Game extends Model
 {
-    protected $table = 'thumbnails';
-    public $timestamps = false;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'medium', 'small', 'tiny',
+        'id', 'game_id', 'name', 'slug', 'box_art_url', 'cover_image', 'created_at', 'updated_at'
     ];
 
     /**
@@ -23,5 +20,7 @@ class Thumbnail extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = [
+		'created_at', 'updated_at'
+	];
 }

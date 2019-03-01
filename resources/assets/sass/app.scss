@@ -1,12 +1,19 @@
 
 // Fonts
 @import url('https://use.fontawesome.com/releases/v5.6.3/css/all.css');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700,900');
 
 // Variables
 @import 'variables';
 
+// Tailwind CSS Base Setup
+@tailwind preflight;
+
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+// Tailwind CSS custom components
+@tailwind components;
 
 .navbar-laravel {
   background-color: #fff;
@@ -14,3 +21,6 @@
 }
 
 @import 'custom';
+
+// Tailwind CSS utility classes
+@tailwind utilities;

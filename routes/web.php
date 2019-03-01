@@ -11,17 +11,21 @@
 |
 */
 
-Route::redirect('/', '/e', 301);
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/game/{slug}', 'GameController@index');
+Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard')->middleware('auth');
+Route::get('/clip/{id}', 'ClipController@index');
 
-Route::prefix('e')->group(function () {
-    Route::get('/', 'HomeController@index')->name('home');
-    Route::get('/clip/{id}', 'ClipController@getClip');
+Route::get('/upload', 'ClipController@show_clip_submission_form')->name('clip-submission');
+Route::post('/clip/submit', 'ClipController@submit')->name('submit-clip');
 
-    Route::get('/upload', 'ClipController@index')->name('clip-submission');
-    Route::post('/clip/submit', 'ClipController@submit')->name('submit-clip');
+Auth::routes();
 
-    Auth::routes();
-});
+Route::get('/comments', 'CommentController@index');
+Route::post('/comments', 'CommentController@store');
+Route::put('/comments/{comment}', 'CommentController@update');
+Route::delete('/comments/{comment}', 'CommentController@destroy');
+
 
 
 

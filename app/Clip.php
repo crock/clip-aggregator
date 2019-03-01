@@ -9,7 +9,6 @@ class Clip extends Model
     use \Spatie\Tags\HasTags;
 
     protected $table = 'clips';
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +16,7 @@ class Clip extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'url', 'tracking_id', 'slug', 'embed_url', 'game', 'language', 'clip_created_date', 'duration', 'views', 'broadcaster_id', 'curator_id', 'vod_id'
+        'title', 'custom_title', 'url', 'twitch_clip_id', 'embed_url', 'game_id', 'language', 'clip_created_date', 'duration', 'view_count', 'broadcaster_id', 'curator_id', 'broadcaster_name', 'curator_name', 'video_id', 'tags', 'thumbnail_url'
     ];
 
     /**
@@ -25,7 +24,5 @@ class Clip extends Model
      *
      * @var array
      */
-    protected $hidden = [
-        'tags'
-    ];
+    protected $hidden = [];
 }

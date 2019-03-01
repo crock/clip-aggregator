@@ -19,37 +19,41 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
+<body class="bg-grey-lightest">
     <div id="app">
 
             <nav class="navbar navbar-dark navbar-expand-lg">
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        <img src="{{ asset('images/FORTNITE_CLIPS_LOGO.png') }}" alt="logo">
+                        <img src="{{ asset('images/PLAYBattleRoyale_onDark.png') }}" width="250" alt="logo">
                     </a>
 
-                    <form method="get" action="" class="form-inline my-2 my-lg-0 d-none d-md-block">
-                        <input type="search" name="q" placeholder="Search for clips..." aria-label="Search">
-                        <button type="submit">Search</button>
-                    </form>
-
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-                        <form method="get" action="" class="form-inline my-3 d-sm-block d-md-none">
-                            <input type="search" name="q" placeholder="Search for clips..." aria-label="Search">
-                            <button type="submit">Search</button>
-                        </form>
+						<ul class="navbar-nav mr-lg-auto">
+							<li class="nav-item">
+								<a class="nav-link" href="{{ url('/game/fortnite') }}">Fortnite</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{ url('/game/apex') }}">Apex Legends</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{ url('/game/pubg') }}">PUBG</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{ url('/game/h1z1') }}">H1Z1</a>
+							</li>
+						</ul>
                         <ul class="navbar-nav ml-lg-auto">
-                            <li class="nav-item">
-                                <a class="nav-link btn-custom" href="{{ route('clip-submission') }}">
-                                    <i class="fas fa-upload"></i> Submit Clip
-                                </a>
-                            </li>
-
                             @guest
+								<li class="nav-item">
+									<a class="btn-custom" href="{{ route('clip-submission') }}">
+										<i class="fas fa-upload"></i> Submit Clip
+									</a>
+								</li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('login') }}">
                                         <i class="fas fa-sign-in-alt"></i> Login

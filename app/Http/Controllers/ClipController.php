@@ -12,6 +12,7 @@ use App\Curator;
 use App\VOD;
 use App\Thumbnail;
 use DB;
+use Illuminate\Support\Carbon;
 
 class ClipController extends Controller
 {
@@ -23,18 +24,23 @@ class ClipController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('web');
     }
 
     /**
-     * Show the application dashboard.
+     * Show the individual clip page
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('submit');
-    }
+		$clipData = $this->fetch_clip_details($request->id);
+        return view('clip')->with([ 'clip' => $clipData ]);
+	}
+
+	public function show_clip_submission_form() {
+		return view('submit');
+	}
 
     public function submit(Request $request) {
 
@@ -42,147 +48,102 @@ class ClipController extends Controller
 
         $slug = Regex::match('/^https?:\/\/clips\.twitch\.tv\/([a-zA-Z]+)\??[\S]+$/', trim($request->url))->group(1);
 
-        $data = $this->getClipDetails($slug);
+        $data = $this->fetch_clip_details($slug);
 
-        if (DB::table('clips')->where('tracking_id', intval($data['tracking_id']))->doesntExist()) {
-            $title = trim($request->title) == false ? $data['title'] : $request->title;
+        if (DB::table('clips')->where('twitch_clip_id', $data['id'])->doesntExist()) {
+			$customTitle = trim($request->title) != "" ? trim($request->title) : "";
 
             $clip = new Clip;
 
             $clip->tags = $tags;
 
-            $clip->tracking_id = intval($data['tracking_id']);
-            $clip->title = $title;
-            $clip->slug = $slug;
+			$clip->twitch_clip_id = $data['id'];
+			$clip->custom_title = $customTitle;
+            $clip->title = $data['title'];
             $clip->url = $data['url'];
             $clip->embed_url = $data['embed_url'];
-            $clip->game = $data['game'];
+            $clip->game_id = $data['game_id'];
             $clip->language = $data['language'];
-            $clip->views = $data['views'];
-            $clip->duration = $data['duration'];
-            $clip->clip_created_date = $data['created_at'];
+            $clip->views = $data['view_count'];
+            //$clip->duration = $data['duration'];
+			$clip->clip_created_date = $data['created_at'];
+			$clip->thumbnial_url = $data['thumbnail_url'];
+			$clip->video_id = $data['video_id'];
 
-            if ($data['vod'] != null) {
-                $clip->vod_id = intval($data['vod']['id']);
+			$clip->broadcaster_name = $data['broadcaster_name'];
+			$clip->broadcaster_id = $data['broadcaster_id'];
 
-                if (DB::table('vods')->where('id', intval($data['vod']['id']))->doesntExist()) {
-                    $vod = new VOD;
-                    $vod->id = intval($data['vod']['id']);
-                    $vod->url = $data['vod']['url'];
-                    $vod->save();
-                }
-            }
+			$clip->curator_name = $data['curator_name'];
+			$clip->curator_id = $data['curator_id'];
 
-            if (DB::table('broadcasters')->where('id', intval($data['broadcaster']['id']))->doesntExist()) {
-                $broadcaster = new Broadcaster;
-                $broadcaster->id = intval($data['broadcaster']['id']);
-                $broadcaster->name = $data['broadcaster']['name'];
-                $broadcaster->display_name = $data['broadcaster']['display_name'];
-                $broadcaster->channel_url = $data['broadcaster']['channel_url'];
-                $broadcaster->logo = $data['broadcaster']['logo'];
-                $broadcaster->save();
-            }
+			$clip->save();
 
-            if (DB::table('curators')->where('id', intval($data['curator']['id']))->doesntExist()) {
-                $curator = new Curator;
-                $curator->id = intval($data['curator']['id']);
-                $curator->name = $data['curator']['name'];
-                $curator->display_name = $data['curator']['display_name'];
-                $curator->channel_url = $data['curator']['channel_url'];
-                $curator->logo = $data['curator']['logo'];
-                $curator->save();
-            }
-
-            $clip->broadcaster_id = intval($data['broadcaster']['id']);
-            $clip->curator_id = intval($data['curator']['id']);
-
-            $clip->save();
-
-            $clipRecord = Clip::where('tracking_id', intval($data['tracking_id']))->first();
-
-            if (DB::table('thumbnails')->where('id', $clipRecord->id)->doesntExist()) {
-                $thumb = new Thumbnail;
-                $thumb->id = $clipRecord->id;
-                $thumb->medium = $data['thumbnails']['medium'];
-                $thumb->small = $data['thumbnails']['small'];
-                $thumb->tiny = $data['thumbnails']['tiny'];
-                $thumb->save();
-            }
         } else {
             return "That clip has previously been submitted to the site.";
         }
 
-    }
+	}
 
-    public function getClipDetails($slug) {
+	/**
+	 * Fetches details about clip id passed into function
+	 * @param String $id
+	 * @return view
+	 */
+	public function fetch_clip_details($id) {
+
+		// Checks to see if ID that is passed into route is a Twitch clip slug
+        if (Regex::match('/[a-zA-Z]+/', $id)->hasMatch()) {
+			$client = new HttpClient([
+				'base_uri' => 'https://api.twitch.tv/helix/',
+				'timeout'  => 2.0
+			]);
+
+				$qs = array(
+				'id' => $id
+			);
+
+				$response = $client->request('get', 'clips', [
+				'query' => $qs,
+				'headers' => [
+					'Client-ID' => ENV('TWITCH_CLIENT_ID')
+				]
+			]);
+
+			return json_decode($response->getBody(), true);
+
+		}
+
+	}
+
+    public function get_top_clips(Request $request) {
+
+		$game = DB::table('games')->where('slug', $request->query('game'))->first();
 
         $client = new HttpClient([
-            // Base URI is used with relative requests
-            'base_uri' => 'https://api.twitch.tv/kraken/',
-            // You can set any number of default request options.
+            'base_uri' => 'https://api.twitch.tv/helix/',
             'timeout'  => 2.0
         ]);
 
-        // Checks to see if ID that is passed into route is a Twitch clip slug
-        if (Regex::match('/[a-zA-Z]+/', $slug)->hasMatch()) {
-            $response = $client->request('get', "clips/$slug", [
-                'headers' => [
-                    'Accept' => 'application/vnd.twitchtv.v5+json',
-                    'Client-ID' => ENV('TWITCH_CLIENT_ID')
-                ]
-            ]);
+		Carbon::setWeekStartsAt(Carbon::SUNDAY);
+		Carbon::setToStringFormat(Carbon::RFC3339);
 
-            $clipData = $response->getBody();
-            return json_decode($clipData, true);
-        }
-    }
+		$dt = Carbon::now('UTC');
+		$startDate = '';
 
-    public function getClip(Request $request) {
+		if ($dt->dayOfWeek == 7) {
+			$startDate = $dt->subWeek();
+		} else {
+			$startDate = $dt->startOfWeek();
+		}
 
-        $client = new HttpClient([
-            // Base URI is used with relative requests
-            'base_uri' => 'https://api.twitch.tv/kraken/',
-            // You can set any number of default request options.
-            'timeout'  => 2.0
-        ]);
-
-        // Checks to see if ID that is passed into route is a Twitch clip slug
-        if (Regex::match('/[a-zA-Z]+/', $request->id)->hasMatch()) {
-
-            $response = $client->request('get', "clips/$request->id", [
-                'headers' => [
-                    'Accept' => 'application/vnd.twitchtv.v5+json',
-                    'Client-ID' => ENV('TWITCH_CLIENT_ID')
-                ]
-            ]);
-
-            $clipData = $response->getBody();
-
-            return view('clip')->with([ 'clip' => json_decode($clipData) ]);
-        }
-    }
-
-    public function getTopClips() {
-
-        $client = new HttpClient([
-            // Base URI is used with relative requests
-            'base_uri' => 'https://api.twitch.tv/kraken/',
-            // You can set any number of default request options.
-            'timeout'  => 2.0
-        ]);
-
-        $qs = array(
-            "game" => "fortnite",
-            "language" => "en",
-            "limit" => 100,
-            "period" => "day",
-            "trending" => true
+		$qs = array(
+			'game_id' => $game->game_id,
+			'started_at' => $startDate->__toString()
         );
 
-        $response = $client->request('get', 'clips/top', [
+        $response = $client->request('get', 'clips', [
             'query' => $qs,
             'headers' => [
-                'Accept' => 'application/vnd.twitchtv.v5+json',
                 'Client-ID' => ENV('TWITCH_CLIENT_ID')
             ]
         ]);
