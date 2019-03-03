@@ -18,3 +18,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/clips/top', 'ClipController@get_top_clips');
+Route::get('/users/twitch', 'UserController@get_twitch_users');

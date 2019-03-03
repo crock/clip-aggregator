@@ -4,19 +4,13 @@
             <div class="card">
                 <a :href="'/clip/' + obj.id"><img class="card-img-top" :src="obj.thumbnail_url" :alt="obj.title"></a>
                 <div class="card-body">
-                    <h5 class="card-title">{{ obj.broadcaster_name }}</h5>
-                    <p class="card-text">{{ obj.title }}</p>
-					<p class="card-text">{{ obj.created_at }}</p>
+                    <h5 class="card-title">{{ obj.title }}</h5>
+					<div class="creator">Clipped by {{ obj.creator_name }}</div>
                 </div>
 
                 <span class="view-count">{{ obj.view_count }}</span>
-                <span class="avatar" style="'background: url(http://placehold.it/250x250) no-repeat center center'"></span>
-                <!-- <span class="duration">{{ obj.duration }}s</span> -->
-
-                <div class="card-footer">
-                    <!-- <a v-if="obj.vod != null" :href="obj.vod != null ? obj.vod.url : '#!'" class="card-link">VOD</a> -->
-                    <a :href="'https://twitch.tv/' + obj.broadcaster_name" class="card-link">Channel</a>
-                </div>
+                <span class="avatar" :style="'background-image: url(' + obj.broadcaster_avatar + ')'"></span>
+				<span class="broadcaster">{{ obj.broadcaster_name }}</span>
             </div>
         </div>
     </div>
@@ -36,29 +30,143 @@
             }
         },
         methods: {
-            getTopClips: function () {
-                let clips = []
-                window.axios.get('/api/clips/top' + `?game=${this.game}`)
-                    .then(function (response) {
-                        console.log(response)
-                        response.data.data.forEach(function (clip) {
-                            clips.push(clip)
-                        });
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-
-                this.fclips = clips
-
-            }
-        },
+            getTopClips() {
+				var vm = this
+				window.axios.get('/api/clips/top' + `?game=${this.game}`)
+					.then(function (response) {
+						response.data.data.forEach(function (clip) {
+							vm.fclips.push(clip)
+						});
+						vm.getAvatars()
+					}).catch(function (e) {
+						console.error(e)
+					})
+			},
+			getAvatars() {
+				var vm = this
+				window.axios.get('/api/users/twitch' + this.idqs)
+					.then(function (response) {
+						response.data.data.forEach(function (user, index) {
+							vm.fclips[index]['broadcaster_avatar'] = user.profile_image_url
+						});
+						vm.$forceUpdate()
+					}).catch(function (e) {
+						console.error(e)
+					})
+			}
+		},
+		computed: {
+			idqs: function () {
+				let idList = []
+				this.fclips.forEach(function (clip) {
+					idList.push(clip.broadcaster_id)
+				})
+				return `?id=${idList.join()}`
+			}
+		},
         created() {
-            this.getTopClips()
+			this.getTopClips()
         },
-
         mounted() {
             console.log('Component mounted.')
         }
     }
 </script>
+
+<style lang="scss" scoped>
+.card {
+	position: relative;
+	width: inherit;
+	height: 300px;
+	margin: 0 auto;
+	border-radius: 25px;
+	box-shadow: 3px 3px 6px 0px #ececec;
+	border: none;
+
+	.card-img-top {
+		background: #399ACC;
+		width: 100%;
+		height: 170px;
+		border-top-left-radius: 25px;
+		border-top-right-radius: 25px;
+	}
+
+	.card-body {
+		.card-title {
+			font-size: 16px;
+			font-weight: bold;
+			margin-top: 25px;
+			margin-bottom: 0;
+		}
+
+		.creator {
+			font-size: 14px;
+			font-weight: 300;
+			font-style: italic;
+			color: #929292;
+			margin-bottom: 15px;
+
+			a {
+				color: #399ACC;
+
+				&:hover {
+					text-decoration: none;
+				}
+			}
+		}
+	}
+
+	.view-count {
+		max-width: 80px;
+		padding: 5px;
+		border-radius: 10px;
+		background-color: #ce4d4d;
+		position: absolute;
+		top: 10px;
+		left: 10px;
+		color: white;
+		text-align: center;
+		font-size: 12px;
+		pointer-events: none;
+	}
+
+	.avatar {
+		background: #399ACC;
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: contain;
+		width: 75px;
+		height: 75px;
+		border-radius: 50%;
+		border: 3px solid white;
+		position: absolute;
+		top: 131px;
+		left: 15px;
+		//transform: translateX(-50%);
+		pointer-events: none;
+	}
+
+	.duration {
+		width: 100px;
+		padding: 5px;
+		background-color: rgba(0, 0, 0, 0.5);
+		position: absolute;
+		bottom: 257px;
+		right: 0;
+		color: white;
+		text-align: center;
+		font-size: 12px;
+		pointer-events: none;
+	}
+
+	.broadcaster {
+		position: absolute;
+		top: 140px;
+		left: 100px;
+		color: white;
+		font-weight: bold;
+		font-size: 18px;
+		pointer-events: none;
+	}
+}
+</style>
