@@ -5,10 +5,11 @@
                 <a :href="'/clip/' + obj.id"><img class="card-img-top" :src="obj.thumbnail_url" :alt="obj.title"></a>
                 <div class="card-body">
                     <h5 class="card-title">{{ obj.title }}</h5>
-					<div class="creator">Clipped by {{ obj.creator_name }}</div>
+					<div v-if="fusers" class="creator">Clipped by <a :href="channel(obj.creator_id)">{{ obj.creator_name }}</a></div>
                 </div>
 
                 <span class="view-count">{{ obj.view_count }}</span>
+				<span class="clip-date">{{ date(obj.created_at) }}</span>
                 <span v-if="fusers" class="avatar" :style="'background-image: url(' + avatar(obj.broadcaster_id) + ')'"></span>
 				<span class="broadcaster">{{ obj.broadcaster_name }}</span>
             </div>
@@ -49,9 +50,13 @@
 				}
 			},
 			avatar(id) {
-				console.log('id', id)
-				console.log('fusers', this.fusers)
-				return this.avatars[id]
+				return this.userInfo[id][1]
+			},
+			channel(id) {
+				return `https://www.twitch.tv/${this.userInfo[id][0]}`
+			},
+			date(createdDate) {
+				return window.moment(createdDate).fromNow()
 			}
 		},
 		computed: {
@@ -59,13 +64,15 @@
 				let idList = []
 				this.fclips.forEach(function (clip) {
 					idList.push(clip.broadcaster_id)
+					idList.push(clip.creator_id)
 				})
 				return `?id=${idList.join()}`
 			},
-			avatars: function () {
+			userInfo: function () {
 
 				return this.fusers.reduce(function(r, a) {
-					r[a.id] = a.profile_image_url || "";
+					r[a.id] = r[a.id] || [];
+					r[a.id].push(a.login, a.profile_image_url)
 					return r;
 				}, {})
 
@@ -131,6 +138,20 @@
 		position: absolute;
 		top: 10px;
 		left: 10px;
+		color: white;
+		text-align: center;
+		font-size: 12px;
+		pointer-events: none;
+	}
+
+	.clip-date {
+		max-width: 150px;
+		padding: 5px;
+		border-radius: 10px;
+		background-color: rgba(0, 0, 0, 0.5);
+		position: absolute;
+		top: 10px;
+		right: 10px;
 		color: white;
 		text-align: center;
 		font-size: 12px;
