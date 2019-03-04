@@ -1,6 +1,6 @@
 <template>
     <div class="row justify-content-center">
-        <div class="col" v-bind:key="obj.id" v-for="obj in fclips">
+        <div class="col" :key="obj.id" v-for="obj in fclips">
             <div class="card">
                 <a :href="'/clip/' + obj.id"><img class="card-img-top" :src="obj.thumbnail_url" :alt="obj.title"></a>
                 <div class="card-body">
@@ -9,7 +9,7 @@
                 </div>
 
                 <span class="view-count">{{ obj.view_count }}</span>
-                <span class="avatar" :style="'background-image: url(' + obj.broadcaster_avatar + ')'"></span>
+                <span v-if="fusers" class="avatar" :style="'background-image: url(' + avatar(obj.broadcaster_id) + ')'"></span>
 				<span class="broadcaster">{{ obj.broadcaster_name }}</span>
             </div>
         </div>
@@ -26,33 +26,32 @@
 		},
         data() {
             return {
-				fclips: []
+				fclips: null,
+				fusers: null
             }
         },
         methods: {
-            getTopClips() {
-				var vm = this
-				window.axios.get('/api/clips/top' + `?game=${this.game}`)
-					.then(function (response) {
-						response.data.data.forEach(function (clip) {
-							vm.fclips.push(clip)
-						});
-						vm.getAvatars()
-					}).catch(function (e) {
-						console.error(e)
-					})
+            async getClips() {
+				try {
+					const response = await window.axios.get('/api/clips/top' + `?game=${this.game}`)
+					this.fclips = response.data.data
+					this.getUsers()
+				} catch (e) {
+					console.error(e);
+				}
 			},
-			getAvatars() {
-				var vm = this
-				window.axios.get('/api/users/twitch' + this.idqs)
-					.then(function (response) {
-						response.data.data.forEach(function (user, index) {
-							vm.fclips[index]['broadcaster_avatar'] = user.profile_image_url
-						});
-						vm.$forceUpdate()
-					}).catch(function (e) {
-						console.error(e)
-					})
+			async getUsers() {
+				try {
+					const response = await window.axios.get('/api/users/twitch' + this.idqs);
+					this.fusers = response.data.data
+				} catch (e) {
+					console.error(e);
+				}
+			},
+			avatar(id) {
+				console.log('id', id)
+				console.log('fusers', this.fusers)
+				return this.avatars[id]
 			}
 		},
 		computed: {
@@ -62,10 +61,18 @@
 					idList.push(clip.broadcaster_id)
 				})
 				return `?id=${idList.join()}`
+			},
+			avatars: function () {
+
+				return this.fusers.reduce(function(r, a) {
+					r[a.id] = a.profile_image_url || "";
+					return r;
+				}, {})
+
 			}
 		},
         created() {
-			this.getTopClips()
+			this.getClips()
         },
         mounted() {
             console.log('Component mounted.')

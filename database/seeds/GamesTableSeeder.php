@@ -26,7 +26,7 @@ class GamesTableSeeder extends Seeder
 				],
 				[
 					'id' => 2,
-					'game_id' => '511244',
+					'game_id' => '511224',
 					'name' => 'Apex Legends',
 					'slug' => 'apex',
 					'box_art_url' => 'https://static-cdn.jtvnw.net/ttv-boxart/Apex%20Legends-150x200.jpg',
