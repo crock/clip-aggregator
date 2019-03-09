@@ -8,7 +8,7 @@ $factory->define(App\Comment::class, function (Faker $faker) {
 
     return [
 		'user_id' => $user->id,
-		'clip_id' => $clip->tracking_id,
+		'clip_id' => $clip->id,
         'body' => $faker->sentence,
     ];
 });

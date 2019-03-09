@@ -11,6 +11,6 @@
 	</form>
 </div>
 <div class="container">
-    <featured-clip></featured-clip>
+    <featured-clip game="random"></featured-clip>
 </div>
 @endsection

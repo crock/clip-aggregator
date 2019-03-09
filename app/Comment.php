@@ -11,10 +11,12 @@ class Comment extends Model
     protected $fillable = [
 		'body',
 		'user_id',
+		'clip_id'
 	];
 
 	protected $casts = [
 		'user_id' => 'integer',
+		'clip_id' => 'integer'
 	];
 
 	public function author()

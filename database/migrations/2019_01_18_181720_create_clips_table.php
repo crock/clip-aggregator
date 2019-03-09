@@ -19,8 +19,8 @@ class CreateClipsTable extends Migration
 
 			$table->string('broadcaster_id');
 			$table->string('broadcaster_name');
-			$table->string('curator_id');
-			$table->string('curator_name');
+			$table->string('creator_id');
+			$table->string('creator_name');
             $table->string('video_id');
 
 			$table->string('title');
@@ -29,7 +29,8 @@ class CreateClipsTable extends Migration
             $table->string('embed_url');
             $table->string('game_id');
             $table->string('language', 2);
-            $table->integer('view_count');
+			$table->integer('view_count');
+			$table->string('thumbnail_url');
             $table->float('duration')->nullable();
             $table->string('clip_created_date');
 

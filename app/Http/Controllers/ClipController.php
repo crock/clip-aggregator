@@ -7,10 +7,7 @@ use GuzzleHttp\Client as HttpClient;
 use Spatie\Regex\Regex;
 use App\Http\Resources\Clip as ClipResource;
 use App\Clip;
-use App\Broadcaster;
-use App\Curator;
-use App\VOD;
-use App\Thumbnail;
+use App\Game;
 use DB;
 use Illuminate\Support\Carbon;
 
@@ -34,7 +31,11 @@ class ClipController extends Controller
      */
     public function index(Request $request)
     {
-		$clipData = $this->fetch_clip_details($request->id);
+		$data = $this->fetch_clip_details($request->id);
+        if (Clip::where('twitch_clip_id', $request->id)->doesntExist()) {
+			$this->add_clip($data);
+		}
+		$clipData = Clip::where('twitch_clip_id', $request->id)->get();
         return view('clip')->with([ 'clip' => $clipData ]);
 	}
 
@@ -42,39 +43,64 @@ class ClipController extends Controller
 		return view('submit');
 	}
 
+	public function add_clip($data) {
+		$clip = new Clip;
+
+		$clip->twitch_clip_id = $data['data'][0]['id'];
+		$clip->custom_title = null;
+		$clip->title = $data['data'][0]['title'];
+		$clip->url = $data['data'][0]['url'];
+		$clip->embed_url = $data['data'][0]['embed_url'];
+		$clip->game_id = $data['data'][0]['game_id'];
+		$clip->language = $data['data'][0]['language'];
+		$clip->view_count = $data['data'][0]['view_count'];
+		//$clip->duration = $data['data'][0]['duration'];
+		$clip->clip_created_date = $data['data'][0]['created_at'];
+		$clip->thumbnail_url = $data['data'][0]['thumbnail_url'];
+		$clip->video_id = $data['data'][0]['video_id'];
+
+		$clip->broadcaster_name = $data['data'][0]['broadcaster_name'];
+		$clip->broadcaster_id = $data['data'][0]['broadcaster_id'];
+
+		$clip->creator_name = $data['data'][0]['creator_name'];
+		$clip->creator_id = $data['data'][0]['creator_id'];
+
+		$clip->save();
+	}
+
     public function submit(Request $request) {
 
-        $tags = explode(',', trim($request->tags));
+        $tags = explode(',', $request->tags);
 
-        $slug = Regex::match('/^https?:\/\/clips\.twitch\.tv\/([a-zA-Z]+)\??[\S]+$/', trim($request->url))->group(1);
+        $slug = Regex::match('/^https?:\/\/clips\.twitch\.tv\/([a-zA-Z]+)\??[\S]+$/', $request->url)->group(1);
 
         $data = $this->fetch_clip_details($slug);
 
-        if (DB::table('clips')->where('twitch_clip_id', $data['id'])->doesntExist()) {
-			$customTitle = trim($request->title) != "" ? trim($request->title) : "";
+        if (DB::table('clips')->where('twitch_clip_id', $data['data'][0]['id'])->doesntExist()) {
+			$customTitle = $request->title ? $request->title : null;
 
             $clip = new Clip;
 
             $clip->tags = $tags;
 
-			$clip->twitch_clip_id = $data['id'];
+			$clip->twitch_clip_id = $data['data'][0]['id'];
 			$clip->custom_title = $customTitle;
-            $clip->title = $data['title'];
-            $clip->url = $data['url'];
-            $clip->embed_url = $data['embed_url'];
-            $clip->game_id = $data['game_id'];
-            $clip->language = $data['language'];
-            $clip->views = $data['view_count'];
-            //$clip->duration = $data['duration'];
-			$clip->clip_created_date = $data['created_at'];
-			$clip->thumbnial_url = $data['thumbnail_url'];
-			$clip->video_id = $data['video_id'];
+            $clip->title = $data['data'][0]['title'];
+            $clip->url = $data['data'][0]['url'];
+            $clip->embed_url = $data['data'][0]['embed_url'];
+            $clip->game_id = $data['data'][0]['game_id'];
+            $clip->language = $data['data'][0]['language'];
+            $clip->view_count = $data['data'][0]['view_count'];
+            //$clip->duration = $data['data'][0]['duration'];
+			$clip->clip_created_date = $data['data'][0]['created_at'];
+			$clip->thumbnail_url = $data['data'][0]['thumbnail_url'];
+			$clip->video_id = $data['data'][0]['video_id'];
 
-			$clip->broadcaster_name = $data['broadcaster_name'];
-			$clip->broadcaster_id = $data['broadcaster_id'];
+			$clip->broadcaster_name = $data['data'][0]['broadcaster_name'];
+			$clip->broadcaster_id = $data['data'][0]['broadcaster_id'];
 
-			$clip->curator_name = $data['curator_name'];
-			$clip->curator_id = $data['curator_id'];
+			$clip->creator_name = $data['data'][0]['creator_name'];
+			$clip->creator_id = $data['data'][0]['creator_id'];
 
 			$clip->save();
 
@@ -116,8 +142,17 @@ class ClipController extends Controller
 	}
 
     public function get_top_clips(Request $request) {
+		$queryParam = strtolower($request->query('game'));
+		$game = new \stdClass;
 
-		$game = DB::table('games')->where('slug', $request->query('game'))->first();
+		if ($queryParam == "random") {
+			$game = Game::all()->random(1);
+		} else {
+			$game = Game::where('slug', $queryParam)->get();
+			if ($game == null) {
+				$game = Game::all()->random(1);
+			}
+		}
 
         $client = new HttpClient([
             'base_uri' => 'https://api.twitch.tv/helix/',
@@ -137,7 +172,7 @@ class ClipController extends Controller
 		}
 
 		$qs = array(
-			'game_id' => $game->game_id,
+			'game_id' => $game[0]->game_id,
 			'started_at' => $startDate->__toString()
         );
 

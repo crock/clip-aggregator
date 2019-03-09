@@ -1,8 +1,8 @@
 <template>
   <div class="max-w-3xl mx-auto">
-	  <div class="mb-4">
-        <h2 class="text-black">Comments</h2>
-      </div>
+    <div class="mb-4">
+      <h2 class="text-black">Comments</h2>
+    </div>
     <div v-show="user != null" class="bg-white rounded shadow-sm p-8 mb-4">
       <textarea
         v-model="data.body"
@@ -22,13 +22,12 @@
         >Cancel</button>
       </div>
     </div>
-    <div class="bg-white rounded shadow-sm p-8">
+    <div class="bg-white rounded shadow-sm p-8" :class="{ invisible: !hasComments }">
       <comment
         v-for="comment in comments"
         :key="comment.id"
         :user="user"
         :comment="comment"
-        :class="[index === comments.length - 1 ? '' : 'mb-6']"
         @comment-updated="updateComment($event)"
         @comment-deleted="deleteComment($event)"
       ></comment>
@@ -38,7 +37,7 @@
 
 <script>
 import comment from "./CommentItem";
-const axios = require("axios");
+
 export default {
   components: {
     comment
@@ -48,16 +47,28 @@ export default {
       default: null,
       required: false,
       type: Object
+	},
+	clip: {
+      default: null,
+      required: false,
+      type: Object
     }
   },
   data: function() {
     return {
       state: "default",
       data: {
-        body: ""
+		body: "",
+		user_id: this.user.id,
+		clip_id: this.clip.id
       },
       comments: []
     };
+  },
+  computed: {
+    hasComments() {
+      return this.comments.length > 0;
+    }
   },
   created() {
     this.fetchComments();
@@ -73,23 +84,21 @@ export default {
     updateComment($event) {
       const t = this;
 
-    axios.put(`/comments/${$event.id}`, $event)
-        .then(({data}) => {
-            t.comments[t.commentIndex($event.id)].body = data.body;
-        })
+      window.axios.put(`/comments/${$event.id}`, $event).then(({ data }) => {
+        t.comments[t.commentIndex($event.id)].body = data.body;
+      });
     },
     deleteComment($event) {
       const t = this;
 
-    axios.delete(`/comments/${$event.id}`, $event)
-        .then(() => {
-            t.comments.splice(t.commentIndex($event.id), 1);
-        })
+      window.axios.delete(`/comments/${$event.id}`, $event).then(() => {
+        t.comments.splice(t.commentIndex($event.id), 1);
+      });
     },
     saveComment() {
       const t = this;
 
-      axios.post("/comments", t.data).then(({ data }) => {
+      window.axios.post("/comments", t.data).then(({ data }) => {
         t.comments.unshift(data);
 
         t.stopEditing();
@@ -98,16 +107,15 @@ export default {
     fetchComments() {
       const t = this;
 
-      axios.get("/comments").then(({ data }) => {
+      window.axios.get(`/comments/${t.clip.id}`).then(({ data }) => {
         t.comments = data;
       });
-	},
-	commentIndex(commentId) {
-		return this.comments.findIndex((element) => {
-			return element.id === commentId;
-		});
-	}
-
+    },
+    commentIndex(commentId) {
+      return this.comments.findIndex(element => {
+        return element.id === commentId;
+      });
+    }
   }
 };
 </script>

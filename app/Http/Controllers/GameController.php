@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Game;
 use App\Http\Controllers\ClipController;
-use DB;
 use Illuminate\Http\Request;
 
 class GameController extends Controller
@@ -18,7 +17,7 @@ class GameController extends Controller
     public function index(Request $request)
     {
 		$game = $request->slug;
-		$gameData = DB::table('games')->where('slug', $game)->get();
+		$gameData = Game::where('slug', $game)->get();
 		return view('game')->with([ 'game' => $gameData ]);
     }
 

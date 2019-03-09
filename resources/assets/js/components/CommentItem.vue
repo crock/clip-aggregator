@@ -45,21 +45,21 @@
 <script>
 export default {
   props: {
-    user: {
-      default: null,
-      required: false,
-      type: Object
-    },
     comment: {
       required: true,
       type: Object
-    }
+	},
+	user: {
+      default: null,
+      required: false,
+      type: Object
+	}
   },
   data: function() {
     return {
       state: "default",
       data: {
-        body: this.comment.body
+		body: this.comment.body
       }
     };
   },
@@ -82,7 +82,7 @@ export default {
 
       this.$emit("comment-updated", {
         id: this.comment.id,
-        body: this.data.body
+		body: this.data.body
       });
     },
     deleteComment() {

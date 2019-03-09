@@ -21,7 +21,7 @@ Route::post('/clip/submit', 'ClipController@submit')->name('submit-clip');
 
 Auth::routes();
 
-Route::get('/comments', 'CommentController@index');
+Route::get('/comments/{id}', 'CommentController@index');
 Route::post('/comments', 'CommentController@store');
 Route::put('/comments/{comment}', 'CommentController@update');
 Route::delete('/comments/{comment}', 'CommentController@destroy');

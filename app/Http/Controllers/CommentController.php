@@ -12,9 +12,10 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $comments = Comment::with('author')
+		$comments = Comment::where('clip_id', $request->id)
+		->with(['clip', 'author'])
         ->orderByDesc('id')
         ->get();
 
@@ -30,14 +31,16 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-			'body' => 'required|string'
+			'body' => 'required|string',
+			'user_id' => 'required|integer',
+			'clip_id'  => 'required|integer'
 		]);
 
 		$comment = auth()->user()
 			->comments()
 			->create($data);
 
-		$comment->load('author');
+		$comment->load(['author', 'clip']);
 
 		return response($comment, 200);
     }
@@ -52,14 +55,14 @@ class CommentController extends Controller
     public function update(Request $request, Comment $comment)
     {
         $data = $request->validate([
-			'body' => 'required|string'
+			'body' => 'required|string',
 		]);
 
 		$comment->body = $data['body'];
 
 		$comment->save();
 
-		$comment->load('author');
+		$comment->load(['author', 'clip']);
 
 		return response($comment, 200);
     }

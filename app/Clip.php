@@ -16,7 +16,7 @@ class Clip extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'custom_title', 'url', 'twitch_clip_id', 'embed_url', 'game_id', 'language', 'clip_created_date', 'duration', 'view_count', 'broadcaster_id', 'curator_id', 'broadcaster_name', 'curator_name', 'video_id', 'tags', 'thumbnail_url'
+        'title', 'custom_title', 'url', 'twitch_clip_id', 'embed_url', 'game_id', 'language', 'clip_created_date', 'duration', 'view_count', 'broadcaster_id', 'creator_id', 'broadcaster_name', 'creator_name', 'video_id', 'tags', 'thumbnail_url'
     ];
 
     /**

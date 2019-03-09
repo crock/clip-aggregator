@@ -22,7 +22,7 @@
 		props: {
 			game: {
 				type: String,
-				default: 'fortnite'
+				default: 'random'
 			}
 		},
         data() {
