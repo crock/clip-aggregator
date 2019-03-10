@@ -28,7 +28,7 @@ class ClipController extends Controller
 		Carbon::setWeekStartsAt(Carbon::SUNDAY);
 		Carbon::setToStringFormat(Carbon::RFC3339);
 
-		$client = new HttpClient([
+		$this->client = new HttpClient([
             'base_uri' => 'https://api.twitch.tv/helix/',
             'timeout'  => 2.0
         ]);

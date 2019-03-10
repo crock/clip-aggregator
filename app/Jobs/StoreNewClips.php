@@ -22,7 +22,7 @@ class StoreNewClips implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Object $clips)
+    public function __construct(Array $clips)
     {
 		$this->clips = $clips;
     }
