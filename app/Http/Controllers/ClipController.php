@@ -48,24 +48,24 @@ class ClipController extends Controller
 	public function add_clip($data) {
 		$clip = new Clip;
 
-		$clip->twitch_clip_id = $data[0]['id'];
+		$clip->twitch_clip_id = $data['id'];
 		$clip->custom_title = null;
-		$clip->title = $data[0]['title'];
-		$clip->url = $data[0]['url'];
-		$clip->embed_url = $data[0]['embed_url'];
-		$clip->game_id = $data[0]['game_id'];
-		$clip->language = $data[0]['language'];
-		$clip->view_count = $data[0]['view_count'];
-		//$clip->duration = $data[0]['duration'];
-		$clip->clip_created_date = $data[0]['created_at'];
-		$clip->thumbnail_url = $data[0]['thumbnail_url'];
-		$clip->video_id = $data[0]['video_id'];
+		$clip->title = $data['title'];
+		$clip->url = $data['url'];
+		$clip->embed_url = $data['embed_url'];
+		$clip->game_id = $data['game_id'];
+		$clip->language = $data['language'];
+		$clip->view_count = $data['view_count'];
+		//$clip->duration = $data['duration'];
+		$clip->clip_created_date = $data['created_at'];
+		$clip->thumbnail_url = $data['thumbnail_url'];
+		$clip->video_id = $data['video_id'];
 
-		$clip->broadcaster_name = $data[0]['broadcaster_name'];
-		$clip->broadcaster_id = $data[0]['broadcaster_id'];
+		$clip->broadcaster_name = $data['broadcaster_name'];
+		$clip->broadcaster_id = $data['broadcaster_id'];
 
-		$clip->creator_name = $data[0]['creator_name'];
-		$clip->creator_id = $data[0]['creator_id'];
+		$clip->creator_name = $data['creator_name'];
+		$clip->creator_id = $data['creator_id'];
 
 		$clip->save();
 	}
