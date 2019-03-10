@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client as HttpClient;
 use Spatie\Regex\Regex;
-use App\Http\Resources\Clip as ClipResource;
 use App\Clip;
 use App\Game;
 use DB;
 use Illuminate\Support\Carbon;
+use App\Jobs\StoreNewClips;
 
 class ClipController extends Controller
 {
+
+	public $client;
 
     /**
      * Create a new controller instance.
@@ -21,7 +23,15 @@ class ClipController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('web');
+		$this->middleware('web');
+
+		Carbon::setWeekStartsAt(Carbon::SUNDAY);
+		Carbon::setToStringFormat(Carbon::RFC3339);
+
+		$client = new HttpClient([
+            'base_uri' => 'https://api.twitch.tv/helix/',
+            'timeout'  => 2.0
+        ]);
     }
 
     /**
@@ -119,23 +129,22 @@ class ClipController extends Controller
 
 		// Checks to see if ID that is passed into route is a Twitch clip slug
         if (Regex::match('/[a-zA-Z]+/', $id)->hasMatch()) {
-			$client = new HttpClient([
-				'base_uri' => 'https://api.twitch.tv/helix/',
-				'timeout'  => 2.0
-			]);
 
-				$qs = array(
+			$qs = array(
 				'id' => $id
 			);
 
-				$response = $client->request('get', 'clips', [
+			$response = $this->client->request('get', 'clips', [
 				'query' => $qs,
 				'headers' => [
 					'Client-ID' => ENV('TWITCH_CLIENT_ID')
 				]
 			]);
 
-			return json_decode($response->getBody(), true);
+			$clips = json_decode($response->getBody(), true);
+			StoreNewClips::dispatch($clips);
+
+			return $clips;
 
 		}
 
@@ -154,14 +163,6 @@ class ClipController extends Controller
 			}
 		}
 
-        $client = new HttpClient([
-            'base_uri' => 'https://api.twitch.tv/helix/',
-            'timeout'  => 2.0
-        ]);
-
-		Carbon::setWeekStartsAt(Carbon::SUNDAY);
-		Carbon::setToStringFormat(Carbon::RFC3339);
-
 		$dt = Carbon::now('UTC');
 		$startDate = '';
 
@@ -173,15 +174,19 @@ class ClipController extends Controller
 
 		$qs = array(
 			'game_id' => $game[0]->game_id,
-			'started_at' => $startDate->__toString()
+			'started_at' => $startDate->__toString(),
+			'first' => 100
         );
 
-        $response = $client->request('get', 'clips', [
+        $response = $this->client->request('get', 'clips', [
             'query' => $qs,
             'headers' => [
                 'Client-ID' => ENV('TWITCH_CLIENT_ID')
             ]
-        ]);
+		]);
+
+		$clips = json_decode($response->getBody(), true);
+		StoreNewClips::dispatch($clips);
 
         return $response->getBody();
 
