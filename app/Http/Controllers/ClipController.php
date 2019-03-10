@@ -190,7 +190,7 @@ class ClipController extends Controller
 		]);
 
 		$clips = json_decode($response->getBody(), true);
-		StoreNewClips::dispatch($clips);
+		StoreNewClips::dispatch($clips['data']);
 
         return $response->getBody();
 

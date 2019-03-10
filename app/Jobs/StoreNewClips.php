@@ -37,7 +37,7 @@ class StoreNewClips implements ShouldQueue
 
 		foreach ($this->clips as $key=>$value) {
 
-			if (Clip::where('twitch_clip_id', $this->clips['data'][$key]['id'])->doesntExist()) {
+			if (Clip::where('twitch_clip_id', $this->clips[$key]['id'])->doesntExist()) {
 				ClipController::add_clip($value);
 			}
 
