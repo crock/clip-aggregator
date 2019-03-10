@@ -12,7 +12,7 @@ use GuzzleHttp\Client as HttpClient;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\ClipController;
 
-class fetch_fresh_fortnite_clips implements ShouldQueue
+class fetch_fresh_apex_clips implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
