@@ -45,7 +45,7 @@ class ClipController extends Controller
 		return view('submit');
 	}
 
-	public function add_clip($data) {
+	public static function add_clip($data) {
 		$clip = new Clip;
 
 		$clip->twitch_clip_id = $data['data'][0]['id'];
