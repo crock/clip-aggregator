@@ -24,14 +24,6 @@ class ClipController extends Controller
     public function __construct()
     {
 		$this->middleware('web');
-
-		Carbon::setWeekStartsAt(Carbon::SUNDAY);
-		Carbon::setToStringFormat(Carbon::RFC3339);
-
-		$this->client = new HttpClient([
-            'base_uri' => 'https://api.twitch.tv/helix/',
-            'timeout'  => 2.0
-        ]);
     }
 
     /**
@@ -41,7 +33,7 @@ class ClipController extends Controller
      */
     public function index(Request $request)
     {
-		$data = $this->fetch_clip_details($request->id);
+		$data = fetch_clip_details($request->id);
         if (Clip::where('twitch_clip_id', $request->id)->doesntExist()) {
 			$this->add_clip($data);
 		}
@@ -84,7 +76,7 @@ class ClipController extends Controller
 
         $slug = Regex::match('/^https?:\/\/clips\.twitch\.tv\/([a-zA-Z]+)\??[\S]+$/', $request->url)->group(1);
 
-        $data = $this->fetch_clip_details($slug);
+        $data = fetch_clip_details($slug);
 
         if (DB::table('clips')->where('twitch_clip_id', $data['data'][0]['id'])->doesntExist()) {
 			$customTitle = $request->title ? $request->title : null;
@@ -127,6 +119,11 @@ class ClipController extends Controller
 	 */
 	public function fetch_clip_details($id) {
 
+		$this->client = new HttpClient([
+            'base_uri' => 'https://api.twitch.tv/helix/',
+            'timeout'  => 2.0
+		]);
+
 		// Checks to see if ID that is passed into route is a Twitch clip slug
         if (Regex::match('/[a-zA-Z]+/', $id)->hasMatch()) {
 
@@ -163,6 +160,9 @@ class ClipController extends Controller
 			}
 		}
 
+		Carbon::setWeekStartsAt(Carbon::SUNDAY);
+		Carbon::setToStringFormat(Carbon::RFC3339);
+
 		$dt = Carbon::now('UTC');
 		$startDate = '';
 
@@ -174,11 +174,15 @@ class ClipController extends Controller
 
 		$qs = array(
 			'game_id' => $game[0]->game_id,
-			'started_at' => $startDate->__toString(),
-			'first' => 100
-        );
+			'started_at' => $startDate->__toString()
+		);
 
-        $response = $this->client->request('get', 'clips', [
+		$client = new HttpClient([
+            'base_uri' => 'https://api.twitch.tv/helix/',
+            'timeout'  => 2.0
+        ]);
+
+        $response = $client->request('get', 'clips', [
             'query' => $qs,
             'headers' => [
                 'Client-ID' => ENV('TWITCH_CLIENT_ID')
