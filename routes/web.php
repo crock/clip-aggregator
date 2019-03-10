@@ -18,6 +18,7 @@ Route::get('/clip/{id}', 'ClipController@index');
 
 Route::get('/upload', 'ClipController@show_clip_submission_form')->name('clip-submission');
 Route::post('/clip/submit', 'ClipController@submit')->name('submit-clip');
+Route::get('/search', 'SearchController@index')->name('search-results');
 
 Auth::routes();
 

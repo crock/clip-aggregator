@@ -1,16 +1,16 @@
 <template>
     <div class="row justify-content-center">
-        <div class="col" :key="obj.id" v-for="obj in fclips">
+        <div class="col" :key="obj.id" v-for="obj in clips">
             <div class="card">
-                <a :href="'/clip/' + obj.id"><img class="card-img-top" :src="obj.thumbnail_url" :alt="obj.title"></a>
+                <a :href="'/clip/' + obj.twitch_clip_id"><img class="card-img-top" :src="obj.thumbnail_url" :alt="obj.title"></a>
                 <div class="card-body">
                     <h5 class="card-title">{{ obj.title }}</h5>
-					<div v-if="fusers" class="creator">Clipped by <a :href="channel(obj.creator_id)">{{ obj.creator_name }}</a></div>
+					<div v-if="users" class="creator">Clipped by <a :href="channel(obj.creator_id)">{{ obj.creator_name }}</a></div>
                 </div>
 
                 <span class="view-count">{{ obj.view_count }}</span>
 				<span class="clip-date">{{ date(obj.created_at) }}</span>
-                <span v-if="fusers" class="avatar" :style="'background-image: url(' + avatar(obj.broadcaster_id) + ')'"></span>
+                <span v-if="users" class="avatar" :style="'background-image: url(' + avatar(obj.broadcaster_id) + ')'"></span>
 				<span class="broadcaster">{{ obj.broadcaster_name }}</span>
             </div>
         </div>
@@ -20,22 +20,38 @@
 <script>
     export default {
 		props: {
-			game: {
+			query: {
 				type: String,
-				default: 'random'
+				default: ''
 			}
 		},
         data() {
             return {
-				fclips: null,
-				fusers: null
+				clips: null,
+				users: null,
+				paging: {
+					currentPage: 1,
+					total: 0,
+					prevPageUrl: null,
+					nextPageUrl: null,
+					perPage: 15,
+					lastPage: null
+				}
             }
         },
         methods: {
             async getClips() {
 				try {
-					const response = await window.axios.get('/api/clips/top' + `?game=${this.game}`)
-					this.fclips = response.data.data
+					const response = await window.axios.get(`/api/search/results?q=${this.query}`)
+					this.clips = response.data.data
+					this.paging.currentPage = response.data.current_page
+					this.paging.total = response.data.total
+					this.paging.prevPageUrl = response.data.prev_page_url
+					this.paging.nextPageUrl = response.data.next_page_url
+					this.paging.firstPageUrl = response.data.first_page_url
+					this.paging.perPage = response.data.per_page
+					this.paging.lastPage = response.data.last_page
+
 					this.getUsers()
 				} catch (e) {
 					console.error(e);
@@ -44,7 +60,7 @@
 			async getUsers() {
 				try {
 					const response = await window.axios.get('/api/users/twitch' + this.idqs);
-					this.fusers = response.data.data
+					this.users = response.data.data
 				} catch (e) {
 					console.error(e);
 				}
@@ -62,7 +78,7 @@
 		computed: {
 			idqs: function () {
 				let idList = []
-				this.fclips.forEach(function (clip) {
+				this.clips.forEach(function (clip) {
 					idList.push(clip.broadcaster_id)
 					idList.push(clip.creator_id)
 				})
@@ -70,7 +86,7 @@
 			},
 			userInfo: function () {
 
-				return this.fusers.reduce(function(r, a) {
+				return this.users.reduce(function(r, a) {
 					r[a.id] = r[a.id] || [];
 					r[a.id].push(a.login, a.profile_image_url)
 					return r;
@@ -86,4 +102,3 @@
         }
     }
 </script>
-

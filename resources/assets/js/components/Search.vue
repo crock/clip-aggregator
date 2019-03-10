@@ -1,13 +1,16 @@
 <template>
 	<div class="search-bar">
 		<input v-model="keywords" type="text" placeholder="Search for clips..." aria-label="Search">
-        <ul class="list-reset" v-if="results.length > 0">
+        <ul class="list-reset" v-if="results.length > 0 && keywords.length > 0">
             <li v-for="result in results" :key="result.id">
 				<a class="block hover:bg-grey-lighter hover:no-underline cursor-pointer p-2" :href="'/clip/' + result.twitch_clip_id">
 					<!-- eslint-disable-next-line -->
 					<div class="text-black font-bold text-lg" v-html="highlight(result.title)"></div>
 					<div class="text-grey-darker font-light text-sm" v-text="result.broadcaster_name"></div>
 				</a>
+			</li>
+			<li>
+				<a :href="'/search?q=' + keywords" class="block hover:bg-grey-lighter text-blue hover:text-blue-dark hover:no-underline cursor-pointer p-2">Show All Results...</a>
 			</li>
         </ul>
     </div>
@@ -49,8 +52,4 @@ export default {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
 

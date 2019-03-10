@@ -17,6 +17,7 @@ window.Vue = require('vue')
 Vue.component('featured-clip', require('./components/FeaturedClip.vue'))
 Vue.component('comments-manager', require('./components/CommentsManager.vue'))
 Vue.component('search', require('./components/Search.vue'))
+Vue.component('search-results', require('./components/SearchResults.vue'))
 //Vue.component('thumb-ratings', require('./components/ThumbRatings.vue'))
 
 const app = new Vue({

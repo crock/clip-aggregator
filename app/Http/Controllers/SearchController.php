@@ -17,10 +17,21 @@ class SearchController extends Controller
         $this->middleware('web');
 	}
 
+	public function index(Request $request) {
+		return view('search')->with(['query' => $request->query('q')]);
+	}
+
 	public function search(Request $request)
 	{
-		$clips = Clip::where('title', 'LIKE', "%{$request->query('q')}%")->get();
+		$clips = Clip::where('title', 'LIKE', "%{$request->query('q')}%")
+		->limit(5)
+		->get();
 
 		return response()->json($clips);
+	}
+
+	public function all_search_results(Request $request)
+	{
+		return Clip::where('title', 'LIKE', "%{$request->query('q')}%")->paginate(15);
 	}
 }
