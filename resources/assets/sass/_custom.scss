@@ -84,22 +84,6 @@ body {
 				}
 
 			}
-
-			&:last-of-type {
-				.nav-item {
-					margin: 0;
-					padding: 0;
-
-					.nav-link {
-						background: #249424;
-						color: white;
-
-						&:hover {
-							background: #1d7e1d;
-						}
-					}
-				}
-			}
 		}
 	}
 }
@@ -180,11 +164,15 @@ body {
       }
 
       .row {
-          width: 100%;
+		  width: 100%;
+		  margin-left: 0;
+		  margin-right: 0;
 
             .col {
                 width: 300px;
-                margin: 25px 10px;
+				margin: 25px 10px;
+				padding-left: 0;
+				padding-right: 0;
             }
 
             .auth-card {

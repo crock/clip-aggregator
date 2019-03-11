@@ -48,12 +48,12 @@
 							</li>
 						</ul>
                         <ul class="navbar-nav ml-lg-auto">
-                            @guest
 								<li class="nav-item">
 									<a class="btn-custom" href="{{ route('clip-submission') }}">
 										<i class="fas fa-upload"></i> Submit Clip
 									</a>
 								</li>
+                            @guest
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('login') }}">
                                         <i class="fas fa-sign-in-alt"></i> Login

@@ -8,8 +8,6 @@ use Spatie\Regex\Regex;
 use App\Clip;
 use App\Game;
 use DB;
-use Illuminate\Support\Carbon;
-use App\Jobs\StoreNewClips;
 
 class ClipController extends Controller
 {
@@ -159,39 +157,22 @@ class ClipController extends Controller
 			}
 		}
 
-		Carbon::setWeekStartsAt(Carbon::SUNDAY);
-		Carbon::setToStringFormat(Carbon::RFC3339);
+		$clips = Clip::where('game_id', '=', $game[0]->game_id)
+		->latest()
+		->orderBy('view_count', 'DESC')
+		->limit(30)
+		->get();
 
-		$dt = Carbon::now('UTC');
-		$startDate = '';
+		return response()->json($clips);
 
-		if ($dt->dayOfWeek == 7) {
-			$startDate = $dt->subWeek();
-		} else {
-			$startDate = $dt->startOfWeek();
-		}
+	}
 
-		$qs = array(
-			'game_id' => $game[0]->game_id,
-			'started_at' => $startDate->__toString()
-		);
+	public function get_random_clips() {
+		$clips = Clip::where('view_count', '>=', 100)
+		->inRandomOrder()
+		->limit(30)
+		->get();
 
-		$client = new HttpClient([
-            'base_uri' => 'https://api.twitch.tv/helix/',
-            'timeout'  => 2.0
-        ]);
-
-        $response = $client->request('get', 'clips', [
-            'query' => $qs,
-            'headers' => [
-                'Client-ID' => ENV('TWITCH_CLIENT_ID')
-            ]
-		]);
-
-		$clips = json_decode($response->getBody(), true);
-		StoreNewClips::dispatch($clips['data']);
-
-        return $response->getBody();
-
-    }
+		return response()->json($clips);
+	}
 }

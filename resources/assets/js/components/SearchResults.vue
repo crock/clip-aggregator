@@ -9,7 +9,7 @@
                 </div>
 
                 <span class="view-count">{{ obj.view_count }}</span>
-				<span class="clip-date">{{ date(obj.created_at) }}</span>
+				<span class="clip-date">{{ date(obj.clip_created_date) }}</span>
                 <span v-if="users" class="avatar" :style="'background-image: url(' + avatar(obj.broadcaster_id) + ')'"></span>
 				<span class="broadcaster">{{ obj.broadcaster_name }}</span>
             </div>
@@ -72,7 +72,7 @@
 				return `https://www.twitch.tv/${this.userInfo[id][0]}`
 			},
 			date(createdDate) {
-				return window.moment(createdDate).fromNow()
+				return window.moment.utc(createdDate).fromNow()
 			}
 		},
 		computed: {
