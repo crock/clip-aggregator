@@ -22,7 +22,34 @@ Vue.component('front-page', require('./components/FrontPage.vue'))
 //Vue.component('thumb-ratings', require('./components/ThumbRatings.vue'))
 
 const app = new Vue({
-	el: '#app'
+	el: '#app',
+	data: {
+		errors: [],
+		url: null
+	},
+	methods: {
+		checkForm: function(e) {
+			this.errors = []
+
+			if (!this.url) {
+				this.errors.push('A valid url is required.')
+			} else if (!this.validClipUrl(this.url)) {
+				this.errors.push('This is not a valid Twitch clip url.')
+			}
+
+			if (!this.errors.length) {
+				return true
+			}
+
+			e.preventDefault()
+		},
+		validClipUrl: function(url) {
+			var re1 = /^https?:\/\/www\.twitch\.tv\/[a-zA-Z0-9_]+\/clip\/([a-zA-Z0-9]+)/
+			var re2 = /^https?:\/\/clips\.twitch\.tv\/([a-zA-Z0-9]+)/
+
+			return re1.test(url) || re2.test(url)
+		}
+	}
 })
 
 module.exports = app

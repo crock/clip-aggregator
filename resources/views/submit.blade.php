@@ -8,13 +8,19 @@
                 <div class="card-header">{{ __('Submit Clip') }}</div>
 
                 <div class="card-body">
-                    <form action="{{ route('submit-clip') }}" method="post">
+                    <form @submit="checkForm" action="{{ route('submit-clip') }}" method="post">
                         @csrf
 
                         <div class="form-group">
                             <label for="url">Clip URL</label>
                             <p class="text-muted">Paste the full URL to a Twitch Clip.</p>
-                            <input class="form-control" id="url" name="url" type="url" required>
+                            <input class="form-control" id="url" name="url" type="url" v-model="url" required>
+							<p v-if="errors.length" class="mt-3">
+								<b>Please correct the following error(s):</b>
+								<ul>
+								<li v-for="error in errors" v-text="error" class="text-red"></li>
+								</ul>
+							</p>
                             @if ($errors->has('url'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('url') }}</strong>
@@ -22,7 +28,7 @@
                             @endif
                         </div>
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="title">Clip Title</label>
                             <p class="text-muted">Optionally give the clip a custom title. If left blank, the Twitch clip title will be used.</p>
                             <input class="form-control" id="title" name="title" type="text">
@@ -42,7 +48,7 @@
                                     <strong>{{ $errors->first('tags') }}</strong>
                                 </span>
                             @endif
-                        </div>
+                        </div> --}}
 
                         <input class="btn btn-primary" type="submit" value="Submit">
 
