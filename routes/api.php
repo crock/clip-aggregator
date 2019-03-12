@@ -19,6 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/clips/top', 'ClipController@get_top_clips');
 Route::get('/clips/random', 'ClipController@get_random_clips');
+Route::get('/games/list', 'GameController@get_games');
+Route::get('/game/{game}', 'GameController@get_game');
 Route::get('/users/twitch', 'UserController@get_twitch_users');
 Route::get('/search', 'SearchController@search');
 Route::get('/search/results', 'SearchController@all_search_results');

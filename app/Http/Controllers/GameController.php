@@ -85,5 +85,20 @@ class GameController extends Controller
     public function destroy(Game $game)
     {
         //
-    }
+	}
+
+	public function get_game(Request $request) {
+
+		$game = Game::where('slug', $request->game)->get();
+
+		return response()->json($game);
+	}
+
+	public function get_games() {
+
+		$games = Game::all();
+
+		return response()->json($games);
+
+	}
 }

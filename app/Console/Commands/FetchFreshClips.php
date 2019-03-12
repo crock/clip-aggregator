@@ -61,8 +61,8 @@ class FetchFreshClips extends Command
 
 		foreach ($games as $game) {
 			$dt = Carbon::now('UTC');
-			$startDate = $dt->subHour();
-			$endDate = $dt->addHour();
+			$startDate = $dt->subDay();
+			$endDate = $dt->now();
 
 			$qs = array(
 				'game_id' => $game->game_id,
@@ -79,8 +79,7 @@ class FetchFreshClips extends Command
 			]);
 
 			$response = json_decode($response->getBody(), true);
-
-			StoreNewClips::dispatch($response);
+			StoreNewClips::dispatch($response['data']);
 		}
 
     }
