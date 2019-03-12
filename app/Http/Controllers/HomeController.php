@@ -13,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('dashboard');
+        $this->middleware('web');
     }
 
     /**
@@ -26,13 +26,4 @@ class HomeController extends Controller
         return view('home');
 	}
 
-	/**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function dashboard()
-    {
-        return view('home');
-    }
 }

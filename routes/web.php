@@ -13,7 +13,6 @@
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/game/{slug}', 'GameController@index');
-Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard')->middleware('auth');
 Route::get('/clip/{id}', 'ClipController@index');
 
 Route::get('/upload', 'ClipController@show_clip_submission_form')->name('clip-submission');
