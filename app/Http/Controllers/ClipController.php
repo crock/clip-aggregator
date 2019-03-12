@@ -22,6 +22,11 @@ class ClipController extends Controller
     public function __construct()
     {
 		$this->middleware('web');
+
+		$this->client = new HttpClient([
+            'base_uri' => 'https://api.twitch.tv/helix/',
+            'timeout'  => 3.0
+		]);
     }
 
     /**
@@ -33,7 +38,7 @@ class ClipController extends Controller
     {
 		$data = $this->fetch_clip_details($request->id);
         if (Clip::where('twitch_clip_id', $request->id)->doesntExist()) {
-			$this->add_clip($data);
+			$this->add_clip($data[0]);
 		}
 		$clipData = Clip::where('twitch_clip_id', $request->id)->get();
         return view('clip')->with([ 'clip' => $clipData ]);
@@ -70,40 +75,22 @@ class ClipController extends Controller
 
     public function submit(Request $request) {
 
+		$slug = "";
         $tags = explode(',', $request->tags);
 
-        $slug = Regex::match('/^https?:\/\/clips\.twitch\.tv\/([a-zA-Z]+)\??[\S]+$/', $request->url)->group(1);
+		$patt1 = "/^https?:\/\/www\.twitch\.tv\/[a-zA-Z0-9_]+\/clip\/([a-zA-Z0-9]+)/";
+		$patt2 = "/^https?:\/\/clips\.twitch\.tv\/([a-zA-Z0-9]+)/";
 
-        $data = $this->fetch_clip_details($slug);
+		if (Regex::match($patt1, $request->url)->hasMatch()) {
+			$slug = Regex::match($patt1, $request->url)->group(1);
+		} else if (Regex::match($patt2, $request->url)->hasMatch()) {
+			$slug = Regex::match($patt2, $request->url)->group(1);
+		}
 
-        if (DB::table('clips')->where('twitch_clip_id', $data['data'][0]['id'])->doesntExist()) {
-			$customTitle = $request->title ? $request->title : null;
+		$data = $this->fetch_clip_details($slug);
 
-            $clip = new Clip;
-
-            $clip->tags = $tags;
-
-			$clip->twitch_clip_id = $data['data'][0]['id'];
-			$clip->custom_title = $customTitle;
-            $clip->title = $data['data'][0]['title'];
-            $clip->url = $data['data'][0]['url'];
-            $clip->embed_url = $data['data'][0]['embed_url'];
-            $clip->game_id = $data['data'][0]['game_id'];
-            $clip->language = $data['data'][0]['language'];
-            $clip->view_count = $data['data'][0]['view_count'];
-            //$clip->duration = $data['data'][0]['duration'];
-			$clip->clip_created_date = $data['data'][0]['created_at'];
-			$clip->thumbnail_url = $data['data'][0]['thumbnail_url'];
-			$clip->video_id = $data['data'][0]['video_id'];
-
-			$clip->broadcaster_name = $data['data'][0]['broadcaster_name'];
-			$clip->broadcaster_id = $data['data'][0]['broadcaster_id'];
-
-			$clip->creator_name = $data['data'][0]['creator_name'];
-			$clip->creator_id = $data['data'][0]['creator_id'];
-
-			$clip->save();
-
+        if (DB::table('clips')->where('twitch_clip_id', $data[0]['id'])->doesntExist()) {
+			$this->add_clip($data[0]);
         } else {
             return "That clip has previously been submitted to the site.";
         }
@@ -117,19 +104,14 @@ class ClipController extends Controller
 	 */
 	public function fetch_clip_details($id) {
 
-		$client = new HttpClient([
-            'base_uri' => 'https://api.twitch.tv/helix/',
-            'timeout'  => 2.0
-		]);
-
 		// Checks to see if ID that is passed into route is a Twitch clip slug
-        if (Regex::match('/[a-zA-Z]+/', $id)->hasMatch()) {
+        if (Regex::match('/[a-zA-Z0-9]+/', $id)->hasMatch()) {
 
 			$qs = array(
 				'id' => $id
 			);
 
-			$response = $client->request('get', 'clips', [
+			$response = $this->client->request('get', 'clips', [
 				'query' => $qs,
 				'headers' => [
 					'Client-ID' => ENV('TWITCH_CLIENT_ID')
