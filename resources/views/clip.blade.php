@@ -12,6 +12,13 @@
 
 		</div>
 	</div>
+	@guest
+	<div class="bg-blue-lightest border-t border-b border-blue text-blue-dark px-4 py-3 my-4" role="alert">
+		<p class="font-bold">Clip Commenting</p>
+		<p class="text-sm">Login to leave a comment on this clip!</p>
+		<a class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded hover:no-underline" href="{{ route('login') }}"><i class="fas fa-sign-in"></i> Login</a>
+	</div>
+	@endguest
 
     <comments-manager :clip="{{ json_encode($clip[0]) }}" :user="{{ json_encode(auth()->user()) }}"></comments-manager>
 </div>
