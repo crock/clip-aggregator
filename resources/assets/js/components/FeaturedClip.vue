@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col" :key="obj.id" v-for="obj in fclips">
             <div class="card">
-                <a :href="'/clip/' + obj.id"><img class="card-img-top" :src="obj.thumbnail_url" :alt="obj.title"></a>
+                <a :href="'/clip/' + obj.twitch_clip_id"><img class="card-img-top" :src="obj.thumbnail_url" :alt="obj.title"></a>
                 <div class="card-body">
                     <h5 class="card-title">{{ obj.title }}</h5>
 					<div v-if="fusers" class="creator">Clipped by <a :href="channel(obj.creator_id)">{{ obj.creator_name }}</a></div>
