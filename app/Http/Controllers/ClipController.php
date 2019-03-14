@@ -76,7 +76,6 @@ class ClipController extends Controller
     public function submit(Request $request) {
 
 		$slug = "";
-        $tags = explode(',', $request->tags);
 
 		$patt1 = "/^https?:\/\/www\.twitch\.tv\/[a-zA-Z0-9_]+\/clip\/([a-zA-Z0-9]+)/";
 		$patt2 = "/^https?:\/\/clips\.twitch\.tv\/([a-zA-Z0-9]+)/";
@@ -91,9 +90,9 @@ class ClipController extends Controller
 
         if (DB::table('clips')->where('twitch_clip_id', $data[0]['id'])->doesntExist()) {
 			$this->add_clip($data[0]);
-        } else {
-            return "That clip has previously been submitted to the site.";
-        }
+		}
+
+		return redirect('/clip/' + $slug);
 
 	}
 
