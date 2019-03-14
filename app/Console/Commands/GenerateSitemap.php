@@ -53,9 +53,9 @@ class GenerateSitemap extends Command
 		$clips_sitemap->writeToFile(public_path('clips_sitemap.xml'));
 
 		SitemapIndex::create()
-			->add('/pages_sitemap.xml')
-			->add('/games_sitemap.xml')->setLastModificationDate(Carbon::today())
-			->add('/clips_sitemap.xml')->setLastModificationDate(Carbon::today())
+		->add(Url::create('/pages_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY))
+			->add(Url::create('/games_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY))
+			->add(Url::create('/clips_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY))
 			->writeToFile(public_path('sitemap.xml'));
 
     }
