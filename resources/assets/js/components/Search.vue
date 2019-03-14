@@ -1,6 +1,6 @@
 <template>
 	<div class="search-bar">
-		<input class="text-center" v-model="keywords" type="text" placeholder="Search for clips..." aria-label="Search">
+		<input class="text-center" v-on:keyup="doSearch" v-model="keywords" type="text" placeholder="Search for clips..." aria-label="Search">
         <ul class="list-reset" v-if="results.length > 0 && keywords.length > 0">
             <li v-for="result in results" :key="result.id">
 				<a class="block hover:bg-grey-lighter hover:no-underline cursor-pointer p-2" :href="'/clip/' + result.twitch_clip_id">
@@ -10,14 +10,13 @@
 				</a>
 			</li>
 			<li>
-				<a :href="'/search?q=' + keywords" class="block hover:bg-grey-lighter text-blue hover:text-blue-dark hover:no-underline cursor-pointer p-2">Show All Results...</a>
+				<a :href="searchUrl" class="block hover:bg-grey-lighter text-blue hover:text-blue-dark hover:no-underline cursor-pointer p-2">Show All Results...</a>
 			</li>
         </ul>
     </div>
 </template>
 
 <script>
-const _ = require('lodash');
 
 export default {
 	data() {
@@ -32,7 +31,11 @@ export default {
             this.fetch();
         }
     },
-
+	computed: {
+		searchUrl() {
+			return '/search?q=' + this.keywords
+		}
+	},
     methods: {
         fetch() {
             window.axios.get('/api/search', { params: { q: this.keywords } })
@@ -44,12 +47,12 @@ export default {
 		highlight(text) {
 			return text.replace(new RegExp(this.keywords, 'gi'), '<span class="highlighted">$&</span>');
 		},
-		doSearch() {
-			_.debounce(function () {
-				this.fetch()
-			}, 300)
+		doSearch(e) {
+			if (e.keyCode === 13) {
+				window.location = this.searchUrl
+			}
 		}
-    }
+	}
 }
 </script>
 

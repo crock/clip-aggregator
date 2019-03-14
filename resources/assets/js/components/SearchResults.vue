@@ -1,6 +1,6 @@
 <template>
-    <div class="row justify-content-center">
-        <div class="col" :key="obj.id" v-for="obj in clips">
+    <div class="flex flex-wrap">
+        <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4 px-2" :key="obj.id" v-for="obj in clips">
             <div class="card">
                 <a :href="'/clip/' + obj.twitch_clip_id"><img class="card-img-top" :src="obj.thumbnail_url" :alt="obj.title"></a>
                 <div class="card-body">
@@ -106,9 +106,8 @@
 <style lang="scss" scoped>
 .card {
 	position: relative;
-	width: inherit;
+	width: 100%;
 	height: 300px;
-	margin: 0 auto;
 	border-radius: 25px;
 	box-shadow: 3px 3px 6px 0px #ececec;
 	border: none;
