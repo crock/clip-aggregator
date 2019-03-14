@@ -107,7 +107,7 @@
 .card {
 	position: relative;
 	width: 100%;
-	height: 300px;
+	height: 350px;
 	border-radius: 25px;
 	box-shadow: 3px 3px 6px 0px #ececec;
 	border: none;
