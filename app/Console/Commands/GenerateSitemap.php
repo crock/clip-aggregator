@@ -43,13 +43,13 @@ class GenerateSitemap extends Command
 
 		$games_sitemap = Sitemap::create();
 		Game::all()->each(function (Game $game) use ($games_sitemap) {
-			$games_sitemap->add(Url::create("/game/{$game->slug}")->setPriority(0.9)->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY));
+			$games_sitemap->add(Url::create("/game/{$game->slug}")->setPriority(0.9)->setLastModificationDate($game->updated_at)->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY));
 		});
 		$games_sitemap->writeToFile(public_path('games_sitemap.xml'));
 
 		$clips_sitemap = Sitemap::create();
 		Clip::all()->each(function (Clip $clip) use ($clips_sitemap) {
-			$clips_sitemap->add(Url::create("/clip/{$clip->twitch_clip_id}")->setPriority(0.6)->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY));
+			$clips_sitemap->add(Url::create("/clip/{$clip->twitch_clip_id}")->setPriority(0.6)->setLastModificationDate($clip->updated_at)->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY));
 		});
 		$clips_sitemap->writeToFile(public_path('clips_sitemap.xml'));
 
