@@ -1,6 +1,6 @@
 <template>
 	<div class="search-bar">
-		<input v-model="keywords" type="text" placeholder="Search for clips..." aria-label="Search">
+		<input class="text-center" v-model="keywords" type="text" placeholder="Search for clips..." aria-label="Search">
         <ul class="list-reset" v-if="results.length > 0 && keywords.length > 0">
             <li v-for="result in results" :key="result.id">
 				<a class="block hover:bg-grey-lighter hover:no-underline cursor-pointer p-2" :href="'/clip/' + result.twitch_clip_id">
@@ -52,4 +52,20 @@ export default {
     }
 }
 </script>
+
+<style>
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  text-align: center;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  text-align: center;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  text-align: center;
+}
+:-moz-placeholder { /* Firefox 18- */
+  text-align: center;
+}
+</style>
+
 
