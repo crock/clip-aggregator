@@ -12,10 +12,6 @@ use App\Game;
 
 class FetchFreshClips extends Command
 {
-
-	protected $client;
-	protected $cc;
-
     /**
      * The name and signature of the console command.
      *
@@ -42,12 +38,6 @@ class FetchFreshClips extends Command
 		Carbon::setWeekStartsAt(Carbon::SUNDAY);
 		Carbon::setToStringFormat(Carbon::RFC3339);
 
-		$this->client = new HttpClient([
-            'base_uri' => 'https://api.twitch.tv/helix/',
-            'timeout'  => 2.0
-		]);
-
-		$this->cc = new ClipController();
     }
 
     /**
@@ -58,6 +48,11 @@ class FetchFreshClips extends Command
     public function handle()
     {
 		$games = Game::all();
+
+		$client = new HttpClient([
+            'base_uri' => 'https://api.twitch.tv/helix/',
+            'timeout'  => 2.0
+		]);
 
 		foreach ($games as $game) {
 			$dt = Carbon::now('UTC');
@@ -71,15 +66,15 @@ class FetchFreshClips extends Command
 				'first' => 100
 			);
 
-			$response = $this->client->request('get', 'clips', [
+			$response = $client->request('get', 'clips', [
 				'query' => $qs,
 				'headers' => [
 					'Client-ID' => ENV('TWITCH_CLIENT_ID')
 				]
 			]);
 
-			$response = json_decode($response->getBody(), true);
-			StoreNewClips::dispatch($response['data']);
+			$response = json_decode($response->getBody(), true)['data'];
+			StoreNewClips::dispatch($response);
 		}
 
     }

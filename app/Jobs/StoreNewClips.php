@@ -16,7 +16,6 @@ class StoreNewClips implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 	protected $clips;
-	protected $cc;
 
     /**
      * Create a new job instance.
@@ -26,7 +25,6 @@ class StoreNewClips implements ShouldQueue
     public function __construct(Array $clips)
     {
 		$this->clips = $clips;
-		$this->cc = new ClipController();
     }
 
     /**
@@ -36,11 +34,12 @@ class StoreNewClips implements ShouldQueue
      */
     public function handle()
     {
+		$cc = new ClipController();
 
 		foreach ($this->clips as $clip) {
 
 			if (Clip::where('twitch_clip_id', $clip['id'])->doesntExist()) {
-				$this->cc->add_clip($clip);
+				$cc->add_clip($clip);
 			}
 
 		}
