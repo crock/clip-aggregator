@@ -4,9 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Spatie\Sitemap\Sitemap;
-use Spatie\Sitemap\SitemapIndex;
+//use Spatie\Sitemap\SitemapIndex;
 use Spatie\Sitemap\Tags\Url;
-use Illuminate\Support\Carbon;
+//use Illuminate\Support\Carbon;
 use App\Clip;
 use App\Game;
 
@@ -53,11 +53,11 @@ class GenerateSitemap extends Command
 		});
 		$clips_sitemap->writeToFile(public_path('clips_sitemap.xml'));
 
-		SitemapIndex::create()
-		->add(Url::create('/pages_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY))
-			->add(Url::create('/games_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY))
-			->add(Url::create('/clips_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY))
-			->writeToFile(public_path('sitemap.xml'));
+		// SitemapIndex::create()
+		// 	->add(Url::create('/pages_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY))
+		// 	->add(Url::create('/games_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY))
+		// 	->add(Url::create('/clips_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY))
+		// 	->writeToFile(public_path('sitemap.xml'));
 
     }
 }
