@@ -8,6 +8,10 @@ require('./bootstrap')
 
 window.Vue = require('vue')
 
+//require('vue-headful')
+const vueHeadful = require('vue-headful').default
+//Vue.component('vue-headful', vueHeadful)
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -23,6 +27,9 @@ Vue.component('front-page', require('./components/FrontPage.vue'))
 
 const app = new Vue({
 	el: '#app',
+	components: {
+		'vue-headful': vueHeadful
+	},
 	data: {
 		errors: [],
 		url: null

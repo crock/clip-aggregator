@@ -1,6 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+<vue-headful
+	title="{{ $clip[0]->title }}"
+	description="Watch and comment on this clip by {{ $clip[0]->broadcaster_name }}."
+	keywords="battle royale, twitch clips, gaming clips, clip, video"
+    image="{{ $clip[0]->thumbnail_url }}"
+    lang="{{ $clip[0]->language }}"
+	locale="{{ $clip[0]->language }}"
+    url="https://playbattleroyale.com/clip/{{ $clip[0]->twitch_clip_id }}">
+	</vue-headful>
+
 <iframe src="{{ $clip[0]->embed_url }}" width='100%' height='500' frameborder='0' scrolling='no' allowfullscreen='true'></iframe>
 <div class="container">
 	<div class="clip-details">

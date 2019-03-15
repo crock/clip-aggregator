@@ -5,6 +5,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+	<meta itemprop="name">
+    <meta property="og:title">
+    <meta name="twitter:title">
+
+    <meta name="description"/>
+    <meta itemprop="description">
+    <meta property="og:description">
+    <meta name="twitter:description">
+
+	<meta name="image"/>
+    <meta itemprop="image">
+    <meta property="og:image">
+    <meta name="twitter:image">
+
+	<meta property="og:url">
+	<meta property="og:image">
+	<meta property="og:locale">
+
+	<meta name="keywords" />
+
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
