@@ -19,6 +19,15 @@
 	gtag('config', 'UA-136332080-1');
 	</script>
 
+	<!-- Google Adsense -->
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<script>
+		(adsbygoogle = window.adsbygoogle || []).push({
+			google_ad_client: "ca-pub-3627563344348929",
+			enable_page_level_ads: true
+		});
+	</script>
+
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
