@@ -1,5 +1,23 @@
 @extends('layouts.app')
 
+@section('headmeta')
+	<meta itemprop="name" content="{{ $clip[0]->title }}">
+    <meta property="og:title" content="{{ $clip[0]->title }}">
+    <meta name="twitter:title" content="{{ $clip[0]->title }}">
+
+    <meta name="description" content="Watch and comment on this clip by {{ $clip[0]->broadcaster_name }}." />
+    <meta itemprop="description" content="Watch and comment on this clip by {{ $clip[0]->broadcaster_name }}.">
+    <meta property="og:description" content="Watch and comment on this clip by {{ $clip[0]->broadcaster_name }}.">
+    <meta name="twitter:description" content="Watch and comment on this clip by {{ $clip[0]->broadcaster_name }}.">
+
+    <meta itemprop="image" content="{{ $clip[0]->thumbnail_url }}">
+    <meta property="og:image" content="{{ $clip[0]->thumbnail_url }}">
+    <meta name="twitter:image" content="{{ $clip[0]->thumbnail_url }}">
+
+	<meta property="og:locale" content="{{ $clip[0]->language }}">
+	<meta property="og:url" content="https://playbattleroyale.com/clip/{{ $clip[0]->twitch_clip_id }}">
+@endsection
+
 @section('content')
 <vue-headful
 	title="{{ $clip[0]->title }}"

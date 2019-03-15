@@ -26,7 +26,5 @@
         "tailwindcss": "^0.7.4",
         "vue": "^2.5.7"
     },
-    "dependencies": {
-        "vue-headful": "^2.0.1"
-    }
+    "dependencies": {}
 }
