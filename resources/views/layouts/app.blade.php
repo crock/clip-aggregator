@@ -42,7 +42,6 @@
 </head>
 <body class="bg-grey-lightest">
     <div id="app">
-
             <nav class="navbar navbar-dark navbar-expand-lg">
                     <a class="navbar-brand" href="{{ url('/') }}">
                         <img src="{{ asset('images/PLAYBattleRoyale_onDark.png') }}" width="250" alt="logo">

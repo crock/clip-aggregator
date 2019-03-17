@@ -1,7 +1,25 @@
 @extends('layouts.app')
 
+@section('headmeta')
+	<meta itemprop="name" content="Battle Royale Clips | PlayBattleRoyale.com">
+    <meta property="og:title" content="Battle Royale Clips | PlayBattleRoyale.com">
+    <meta name="twitter:title" content="Battle Royale Clips | PlayBattleRoyale.com">
+
+    <meta name="description" content="Watch and comment on battle royale clips at PlayBattleRoyale.com" />
+    <meta itemprop="description" content="Watch and comment on battle royale clips at PlayBattleRoyale.com">
+    <meta property="og:description" content="Watch and comment on battle royale clips at PlayBattleRoyale.com">
+    <meta name="twitter:description" content="Watch and comment on battle royale clips at PlayBattleRoyale.com">
+
+    <meta itemprop="image" content="{{ asset('/images/brgames_cover.jpg') }}">
+    <meta property="og:image" content="{{ asset('/images/brgames_cover.jpg') }}">
+    <meta name="twitter:image" content="{{ asset('/images/brgames_cover.jpg') }}">
+
+	<meta property="og:locale" content="en">
+	<meta property="og:url" content="https://playbattleroyale.com/">
+@endsection
+
 @section('content')
-<div class="hero-banner">
+<div class="hero-banner" style="background-image: url({{ asset('/images/brgames_cover.jpg') }});">
     <h1>PlayBattleRoyale.com</h1>
     <h2>Search the largest database of battle royale clips</h2>
 

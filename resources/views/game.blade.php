@@ -1,5 +1,23 @@
 @extends('layouts.app')
 
+@section('headmeta')
+	<meta itemprop="name" content="{{ $game[0]->name }} Clips | PlayBattleRoyale.com">
+    <meta property="og:title" content="{{ $game[0]->name }} Clips | PlayBattleRoyale.com">
+    <meta name="twitter:title" content="{{ $game[0]->name }} Clips | PlayBattleRoyale.com">
+
+    <meta name="description" content="Watch and comment on {{ $game[0]->name }} clips at PlayBattleRoyale.com" />
+    <meta itemprop="description" content="Watch and comment on {{ $game[0]->name }} clips at PlayBattleRoyale.com">
+    <meta property="og:description" content="Watch and comment on {{ $game[0]->name }} clips at PlayBattleRoyale.com">
+    <meta name="twitter:description" content="Watch and comment on {{ $game[0]->name }} clips at PlayBattleRoyale.com">
+
+    <meta itemprop="image" content="{{ $game[0]->cover_image }}">
+    <meta property="og:image" content="{{ $game[0]->cover_image }}">
+    <meta name="twitter:image" content="{{ $game[0]->cover_image }}">
+
+	<meta property="og:locale" content="en">
+	<meta property="og:url" content="https://playbattleroyale.com/game/{{ $game[0]->slug }}">
+@endsection
+
 @section('content')
 <div class="hero-banner" style="background-image: url({{ $game[0]->cover_image }});">
     <h1>{{ $game[0]->name }}</h1>
