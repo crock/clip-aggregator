@@ -14,6 +14,10 @@
     <meta property="og:image" content="{{ asset('/images/brgames_cover.jpg') }}">
     <meta name="twitter:image" content="{{ asset('/images/brgames_cover.jpg') }}">
 
+	<meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@PBR_Clips" />
+	<meta name="twitter:creator" content="@CrocBuzz" />
+
 	<meta property="og:locale" content="en">
 	<meta property="og:url" content="https://playbattleroyale.com/">
 @endsection

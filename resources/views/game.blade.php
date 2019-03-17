@@ -14,6 +14,10 @@
     <meta property="og:image" content="{{ $game[0]->cover_image }}">
     <meta name="twitter:image" content="{{ $game[0]->cover_image }}">
 
+	<meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@PBR_Clips" />
+	<meta name="twitter:creator" content="@CrocBuzz" />
+
 	<meta property="og:locale" content="en">
 	<meta property="og:url" content="https://playbattleroyale.com/game/{{ $game[0]->slug }}">
 @endsection

@@ -14,6 +14,19 @@
     <meta property="og:image" content="{{ $clip[0]->thumbnail_url }}">
     <meta name="twitter:image" content="{{ $clip[0]->thumbnail_url }}">
 
+	<meta property="og:video:width" content="640" />
+	<meta property="og:video:height" content="426" />
+	<meta property="og:video" content="{{ $clip[0]->embed_url }}" />
+	<meta property="og:video:type" content="text/html" />
+
+	<meta name="twitter:card" content="player" />
+    <meta name="twitter:site" content="@PBR_Clips" />
+    <meta name="twitter:player" content="{{ $clip[0]->embed_url }}" />
+    <meta name="twitter:player:width" content="320" />
+    <meta name="twitter:player:height" content="180" />
+    <meta name="twitter:player:stream" content="{{ $clip[0]->embed_url }}" />
+    <meta name="twitter:player:stream:content_type" content="video/mp4" />
+
 	<meta property="og:locale" content="{{ $clip[0]->language }}">
 	<meta property="og:url" content="https://playbattleroyale.com/clip/{{ $clip[0]->twitch_clip_id }}">
 @endsection
