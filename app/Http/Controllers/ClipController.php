@@ -94,7 +94,7 @@ class ClipController extends Controller
 			$this->add_clip($data[0]);
 		}
 
-		return redirect('/clip/' + $slug);
+		return redirect('/clip/' . $slug);
 
 	}
 
