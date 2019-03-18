@@ -91,6 +91,8 @@
 .card {
 	position: relative;
 	width: 100%;
+	max-width: 339px;
+	margin: 0 auto;
 	height: 350px;
 	border-radius: 25px;
 	box-shadow: 3px 3px 6px 0px #ececec;

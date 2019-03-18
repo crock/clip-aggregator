@@ -87,6 +87,8 @@
 	position: relative;
 	width: 100%;
 	height: 350px;
+	max-width: 339px;
+	margin: 0 auto;
 	border-radius: 25px;
 	box-shadow: 3px 3px 6px 0px #ececec;
 	border: none;

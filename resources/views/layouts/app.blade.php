@@ -33,7 +33,27 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+	<script type="text/javascript">
+		//(function($) {
 
+			document.addEventListener("DOMContentLoaded", function (event) {
+				var $hamburger = window.jQuery('.hamburger')
+				var menu = window.jQuery('#menu')
+
+				$hamburger.on('click', function(e) {
+					e.preventDefault()
+					$hamburger.toggleClass('is-active')
+					menu.attr('data-menu-status', menu.attr('data-menu-status') == 'collapsed' ? 'expanded' : 'collapsed')
+				})
+
+				window.jQuery('.dropdown > a').on('click', function(e) {
+					e.preventDefault()
+					window.jQuery(this).parent().toggleClass('is-expanded')
+				})
+			})
+
+		//})(window.jQuery)
+	</script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
@@ -41,67 +61,51 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="bg-grey-lightest">
-    <div id="app">
-            <nav class="navbar navbar-dark navbar-expand-lg">
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        <img src="{{ asset('images/PLAYBattleRoyale_onDark.png') }}" width="250" alt="logo">
-                    </a>
+	<div id="app">
+		<header>
+			<div class="brand-logo">
+				<a href="{{ url('/') }}">
+					<img src="{{ asset('images/PLAYBattleRoyale_onDark.png') }}" alt="logo">
+				</a>
+			</div>
+			<div class="menu-toggler">
+				<button class="hamburger hamburger--slider" type="button" aria-label="Toggle navigation">
+				<span class="hamburger-box">
+					<span class="hamburger-inner"></span>
+				</span>
+				</button>
+			</div>
+			<nav id="menu" class="main-menu" data-menu-status="collapsed">
+				<div class="dropdown game-menu">
+					<a href="javascript:void(0)">Games <i class="fas fa-caret-down"></i></a>
+					<div class="sub-menu">
+						@foreach ($games as $game)
+						<a href="{{ url('/game/' . $game->slug) }}">{{ $game->slug }}</a>
+						@endforeach
+					</div>
+				</div>
+				<a href="{{ route('clip-submission') }}"><i class="fas fa-upload"></i> Submit Clip</a>
+				@guest
+				<a href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a>
+				@endguest
+				@auth
+				<div class="dropdown auth-menu">
+					<a href="javascript:void(0)"><i class="fas fa-user"></i> {{ Auth::user()->name }} <i class="fas fa-caret-down"></i></a>
+					<div class="sub-menu">
+						<a href="javascript:void(0)"
+							onclick="event.preventDefault();
+							document.getElementById('logout-form').submit();">
+							{{ __('Logout') }}
+						</a>
 
-					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-						<ul class="navbar-nav mr-lg-auto">
-							<li class="nav-item">
-								<a class="nav-link" href="{{ url('/game/fortnite') }}">Fortnite</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{{ url('/game/apex') }}">Apex Legends</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{{ url('/game/pubg') }}">PUBG</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{{ url('/game/h1z1') }}">H1Z1</a>
-							</li>
-						</ul>
-                        <ul class="navbar-nav ml-lg-auto">
-								<li class="nav-item">
-									<a class="nav-link" href="{{ route('clip-submission') }}">
-										<i class="fas fa-upload"></i> Submit Clip
-									</a>
-								</li>
-                            @guest
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">
-                                        <i class="fas fa-sign-in-alt"></i> Login
-                                    </a>
-                                </li>
-							@endguest
-							@auth
-                                <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        <i class="fas fa-user"></i> {{ Auth::user()->name }} <span class="caret"></span>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="javascript:void(0)"
-                                            onclick="event.preventDefault();
-                                                                    document.getElementById('logout-form').submit();">
-                                            {{ __('Logout') }}
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            @csrf
-                                        </form>
-                                    </div>
-                                </li>
-							@endauth
-                        </ul>
-                    </div>
-            </nav>
+						<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+							@csrf
+						</form>
+					</div>
+				</div>
+				@endauth
+			</nav>
+		</header>
 
         <main>
             @yield('content')

@@ -1,62 +1,210 @@
 body {
     width: 100%;
-    height: 100%;
-  }
+	height: 100%;
+}
 
-  nav.navbar {
-	  width: 100%;
-	  height: 60px;
-	  background: #3490dc;
-	  position: relative;
+header {
+	width: 100%;
+	height: 70px;
+	background-color: #3490dc;
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	position: relative;
 
-      .navbar-brand {
-          float: left;
-      }
-
-      .navbar-nav {
-
-          .nav-item {
-
-              .nav-link {
-				  color: #f1f5f8;
-
-                  &:hover {
-                      color: white;
-                  }
-              }
-          }
-      }
-  }
-
-  @media screen and (max-width: 991px) {
-
-	.navbar-collapse {
-		width: 100%;
-		background: #2f2f2f;
+	.brand-logo {
 		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		position: absolute;
-		top: 60px;
-		left: 0;
-		z-index: 1000;
+		width: 300px;
+		height: inherit;
 
-		.navbar-nav {
-			width: 100%;
+		a {
+			align-self: center;
 
-			.nav-item {
-				height: 40px;
-
-				.nav-link {
-					text-align: center;
-					display: block;
-
-					&:hover {
-						background: #353535;
-					}
-				}
-
+			img {
+				width: 250px;
+				padding-left: 15px;
 			}
+		}
+	}
+
+	.menu-toggler {
+		display: none;
+
+		button:focus {
+			outline: none;
+		}
+
+		.hamburger .hamburger-inner,
+		.hamburger .hamburger-inner:after,
+		.hamburger .hamburger-inner:before,
+		.hamburger.is-active .hamburger-inner,
+		.hamburger.is-active .hamburger-inner:after,
+		.hamburger.is-active .hamburger-inner:before {
+			background-color: white;
+		}
+	}
+
+	.main-menu {
+		display: flex;
+		width: calc(100% - 300px);
+		height: inherit;
+		justify-content: flex-end;
+		align-items: center;
+
+		& > a,div>a {
+			display: block;
+			padding: 25px 10px;
+			text-decoration: none;
+			color: #f1f5f8;
+
+			&:hover {
+				color: white;
+			}
+		}
+
+		.dropdown {
+
+			.sub-menu {
+				display: none;
+			}
+		}
+
+		.dropdown:hover,
+		.dropdown.is-expanded {
+			& > .sub-menu {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+		}
+
+		.auth-menu > .sub-menu {
+			right: 0;
+		}
+
+		.sub-menu {
+			display: none;
+			width: 200px;
+			height: auto;
+			position: absolute;
+			z-index: 100;
+			background-color: white;
+			box-shadow: 3px 3px 6px 0px #3d4852;
+
+			a {
+				color: #aaaaaa;
+				text-decoration: none;
+				text-align: center;
+				text-transform: uppercase;
+
+				&:hover {
+					color: black;
+					background: #f9f9f9;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	header {
+		width: 100%;
+		height: 70px;
+		background-color: #3490dc;
+
+		.brand-logo {
+			display: flex;
+			width: calc(100% - 70px);
+			height: inherit;
+
+			a {
+				align-self: center;
+
+				img {
+					width: 200px;
+				}
+			}
+		}
+
+		.menu-toggler {
+			display: flex;
+		}
+
+		.main-menu {
+			display: none;
+			z-index: 100;
+			background-color: #2872af;
+			width: 100%;
+			height: auto;
+			flex-direction: column;
+			justify-content: flex-start;
+
+			& > a,& > div {
+				display: block;
+				width: 100%;
+				text-align: center;
+				text-decoration: none;
+				color: #f1f5f8;
+
+				&:hover {
+					color: white;
+					background: #2d7bbc;
+				}
+			}
+
+			.dropdown:not(.is-expanded) {
+				.sub-menu {
+					display: none;
+				}
+			}
+
+			.is-expanded {
+				.sub-menu {
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+				}
+			}
+
+			.sub-menu {
+				display: none;
+				width: 100%;
+				height: 264px;
+				margin: 0 auto;
+				position: relative;
+				background-color: #262626;
+				box-shadow: none;
+				border-radius: 0;
+
+				a {
+					color: #aaaaaa;
+					text-decoration: none;
+					text-align: center;
+					text-transform: uppercase;
+
+					&:nth-of-type(even) {
+						background-color: #2d2d2d;
+
+						&:hover {
+							color: white;
+							background-color: #2d2d2d;
+						}
+					}
+					&:nth-of-type(odd) {
+						background-color: #262626;
+
+						&:hover {
+							color: white;
+							background-color: #262626;
+						}
+					}
+
+				}
+			}
+		}
+
+		.main-menu[data-menu-status="expanded"] {
+			display: flex;
 		}
 	}
 }
