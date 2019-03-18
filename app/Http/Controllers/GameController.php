@@ -18,7 +18,8 @@ class GameController extends Controller
     {
 		$game = $request->slug;
 		$gameData = Game::where('slug', $game)->get();
-		return view('game')->with([ 'game' => $gameData ]);
+		$games = Game::all();
+		return view('game')->with([ 'game' => $gameData, 'games' => $games]);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Game;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -42,5 +43,10 @@ class LoginController extends Controller
 		\Auth::logout();
 		\Session::flush();
 		return redirect('/');
+	}
+
+	public function showLoginForm() {
+		$games = Game::all();
+		return view('auth.login')->with(['games' => $games]);
 	}
 }

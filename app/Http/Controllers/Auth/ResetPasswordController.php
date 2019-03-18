@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Game;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
@@ -35,5 +36,10 @@ class ResetPasswordController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
-    }
+	}
+
+	public function showResetForm() {
+		$games = Game::all();
+		return view('auth.passwords.reset')->with(['games' => $games]);
+	}
 }

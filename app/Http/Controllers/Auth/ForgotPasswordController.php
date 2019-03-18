@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Game;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
@@ -28,5 +29,10 @@ class ForgotPasswordController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
-    }
+	}
+
+	public function showLinkRequestForm() {
+		$games = Game::all();
+		return view('auth.passwords.email')->with(['games' => $games]);
+	}
 }

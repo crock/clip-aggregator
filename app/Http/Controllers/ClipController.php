@@ -41,11 +41,13 @@ class ClipController extends Controller
 			$this->add_clip($data[0]);
 		}
 		$clipData = Clip::where('twitch_clip_id', $request->id)->get();
-        return view('clip')->with([ 'clip' => $clipData ]);
+		$games = Game::all();
+        return view('clip')->with([ 'clip' => $clipData, 'games' => $games ]);
 	}
 
 	public function show_clip_submission_form() {
-		return view('submit');
+		$games = Game::all();
+		return view('submit')->with(['games' => $games]);
 	}
 
 	public function add_clip($data) {

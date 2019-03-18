@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Clip;
+use App\Game;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
@@ -18,7 +19,8 @@ class SearchController extends Controller
 	}
 
 	public function index(Request $request) {
-		return view('search')->with(['query' => $request->query('q')]);
+		$games = Game::all();
+		return view('search')->with(['query' => $request->query('q'), 'games' => $games]);
 	}
 
 	public function search(Request $request)
