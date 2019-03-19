@@ -394,11 +394,37 @@ header {
     padding: 15px 10px;
 }
 
+// Discord
 .social-bar a:first-of-type:hover {
     background: #7289DA;
 }
 
+// Twitter
+.social-bar a:nth-of-type(2):hover {
+	background: #1EA1F3;
+}
+
+// Instagram
+.social-bar a:nth-of-type(3):hover {
+	background: #df5169;
+}
+
+// YouTube
 .social-bar a:last-of-type:hover {
     background: red;
+}
+
+@media screen and (max-width: 568px) {
+	.social-bar {
+		justify-content: center;
+
+		a {
+			padding: 15px 20px;
+
+			span {
+				display: none;
+			}
+		}
+	}
 }
 

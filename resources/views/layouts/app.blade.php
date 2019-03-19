@@ -64,10 +64,16 @@
 	<div id="app">
 		<div class="social-bar">
 			<a href="https://discord.gg/Kb6mT7q">
-				<i class="fab fa-discord"></i> Discord
+				<i class="fab fa-discord"></i> <span>Discord</span>
+			</a>
+			<a href="https://twitter.com/PBR_Clips">
+				<i class="fab fa-twitter"></i> <span>Twitter</span>
+			</a>
+			<a href="https://www.instagram.com/clipping/">
+				<i class="fab fa-instagram"></i> <span>Instagram</span>
 			</a>
 			<a href="https://www.youtube.com/channel/UCIv718h2yHBPBcXhcT6NLTQ">
-				<i class="fab fa-youtube"></i> YouTube
+				<i class="fab fa-youtube"></i> <span>YouTube</span>
 			</a>
 		</div>
 		<header>
