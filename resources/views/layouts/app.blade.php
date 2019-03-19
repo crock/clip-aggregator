@@ -62,6 +62,14 @@
 </head>
 <body class="bg-grey-lightest">
 	<div id="app">
+		<div class="social-bar">
+			<a href="https://discord.gg/Kb6mT7q">
+				<i class="fab fa-discord"></i> Discord
+			</a>
+			<a href="https://www.youtube.com/channel/UCIv718h2yHBPBcXhcT6NLTQ">
+				<i class="fab fa-youtube"></i> YouTube
+			</a>
+		</div>
 		<header>
 			<div class="brand-logo">
 				<a href="{{ url('/') }}">

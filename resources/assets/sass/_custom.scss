@@ -24,7 +24,7 @@ header {
 				width: 150px;
 				padding-left: 15px;
 				position: absolute;
-				top: 0;
+				top: -25px;
 				z-index: 200;
 			}
 		}
@@ -125,6 +125,7 @@ header {
 
 				img {
 					width: 100px;
+					top: -4px;
 				}
 			}
 		}
@@ -369,11 +370,35 @@ header {
   }
 
 
-  .clip-details {
-	  display: flex;
-	  flex-flow: row wrap;
-	  justify-content: space-between;
-	  align-content: center;
-	  margin: 25px 0;
-  }
+.clip-details {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
+	align-content: center;
+	margin: 25px 0;
+}
+
+.social-bar {
+    width: 100%;
+    height: 50px;
+    background: #2f2f2f;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.social-bar a {
+    text-decoration: none;
+    color: white;
+    display: block;
+    padding: 15px 10px;
+}
+
+.social-bar a:first-of-type:hover {
+    background: #7289DA;
+}
+
+.social-bar a:last-of-type:hover {
+    background: red;
+}
 
