@@ -65,7 +65,7 @@
 		<header>
 			<div class="brand-logo">
 				<a href="{{ url('/') }}">
-					<img src="{{ asset('images/PLAYBattleRoyale_onDark.png') }}" alt="logo">
+					<img src="{{ asset('images/PBR.png') }}" alt="logo">
 				</a>
 			</div>
 			<div class="menu-toggler">
