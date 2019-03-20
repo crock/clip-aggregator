@@ -5,6 +5,7 @@
         :value="value"
         :chart-data="data"
         :ranges="card.ranges"
+        :format="format"
         :prefix="prefix"
         :suffix="suffix"
         :selected-range-key="selectedRangeKey"
@@ -39,12 +40,18 @@ export default {
             type: [Number, String],
             default: '',
         },
+
+        lens: {
+            type: String,
+            default: '',
+        },
     },
 
     data: () => ({
         loading: true,
         value: '',
         data: [],
+        format: '(0[.]00a)',
         prefix: '',
         suffix: '',
         selectedRangeKey: null,
@@ -72,7 +79,7 @@ export default {
             Minimum(Nova.request().get(this.metricEndpoint, this.metricPayload)).then(
                 ({
                     data: {
-                        value: { labels, trend, value, prefix, suffix },
+                        value: { labels, trend, value, prefix, suffix, format },
                     },
                 }) => {
                     this.value = value
@@ -88,8 +95,9 @@ export default {
                             }),
                         ],
                     }
-                    this.prefix = prefix || ''
-                    this.suffix = suffix || ''
+                    this.format = format || this.format
+                    this.prefix = prefix || this.prefix
+                    this.suffix = suffix || this.suffix
                     this.loading = false
                 }
             )
@@ -117,12 +125,13 @@ export default {
         },
 
         metricEndpoint() {
+            const lens = this.lens !== '' ? `/lens/${this.lens}` : ''
             if (this.resourceName && this.resourceId) {
-                return `/nova-api/${this.resourceName}/${this.resourceId}/metrics/${
+                return `/nova-api/${this.resourceName}${lens}/${this.resourceId}/metrics/${
                     this.card.uriKey
                 }`
             } else if (this.resourceName) {
-                return `/nova-api/${this.resourceName}/metrics/${this.card.uriKey}`
+                return `/nova-api/${this.resourceName}${lens}/metrics/${this.card.uriKey}`
             } else {
                 return `/nova-api/metrics/${this.card.uriKey}`
             }

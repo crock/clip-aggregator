@@ -10,9 +10,9 @@
     <meta property="og:description" content="Watch and comment on {{ $game[0]->name }} clips at PlayBattleRoyale.com">
     <meta name="twitter:description" content="Watch and comment on {{ $game[0]->name }} clips at PlayBattleRoyale.com">
 
-    <meta itemprop="image" content="{{ $game[0]->cover_image }}">
-    <meta property="og:image" content="{{ $game[0]->cover_image }}">
-    <meta name="twitter:image" content="{{ $game[0]->cover_image }}">
+    <meta itemprop="image" content="{{ '/storage/' . $game[0]->cover_image }}">
+    <meta property="og:image" content="{{ '/storage/' . $game[0]->cover_image }}">
+    <meta name="twitter:image" content="{{ '/storage/' . $game[0]->cover_image }}">
 
 	<meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@PBR_Clips" />
@@ -23,7 +23,7 @@
 @endsection
 
 @section('content')
-<div class="hero-banner" style="background-image: url({{ $game[0]->cover_image }});">
+<div class="hero-banner" style="background-image: url({{ '/storage/' . $game[0]->cover_image }});">
     <h1>{{ $game[0]->name }}</h1>
     <h2>Search the largest database of battle royale clips</h2>
 

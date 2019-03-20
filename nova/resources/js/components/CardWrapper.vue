@@ -1,9 +1,5 @@
 <template>
-    <div
-        class="px-3 mb-6"
-        :class="widthClass"
-        :key="`${card.component}.${card.name}`"
-    >
+    <div class="px-3 mb-6" :class="widthClass" :key="`${card.component}.${card.name}`">
         <component
             :class="cardSizeClass"
             :is="card.component"
@@ -11,6 +7,7 @@
             :resource="resource"
             :resourceName="resourceName"
             :resourceId="resourceId"
+            :lens="lens"
         />
     </div>
 </template>
@@ -40,6 +37,11 @@ export default {
 
         resourceId: {
             type: [Number, String],
+        },
+
+        lens: {
+            lens: String,
+            default: '',
         },
     },
 

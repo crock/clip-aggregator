@@ -3,20 +3,13 @@
         <div class="flex mb-4">
             <h3 class="mr-3 text-base text-80 font-bold">{{ title }}</h3>
 
-            <select
+            <select-control
                 v-if="ranges.length > 0"
                 @change="handleChange"
                 class="ml-auto min-w-24 h-6 text-xs no-appearance bg-40"
-            >
-                <option
-                    v-for="option in ranges"
-                    :key="option.value"
-                    :value="option.value"
-                    :selected="option.value == selectedRangeKey"
-                >
-                    {{ option.label }}
-                </option>
-            </select>
+                :options="ranges"
+                :selected="selectedRangeKey"
+            />
         </div>
 
         <p class="flex items-center text-4xl mb-4">
@@ -86,7 +79,7 @@ export default {
         ranges: { type: Array, default: () => [] },
         format: {
             type: String,
-            default: '(0.00a)',
+            default: '(0[.]00a)',
         },
     },
 
@@ -135,11 +128,7 @@ export default {
 
         formattedValue() {
             if (!this.isNullValue) {
-                const numeralValue = numeral(this.value)
-
-                return numeralValue.value() > 1000
-                    ? this.prefix + numeralValue.format(this.format)
-                    : this.prefix + this.value
+                return this.prefix + numeral(this.value).format(this.format)
             }
 
             return ''
