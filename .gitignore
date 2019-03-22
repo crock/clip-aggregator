@@ -13,3 +13,6 @@ yarn-error.log
 .env
 .DS_Store
 storage/framework/cache/
+public/games_sitemap.xml
+public/clips_sitemap.xml
+public/pages_sitemap.xml
