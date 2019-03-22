@@ -34,22 +34,22 @@ class GenerateSitemap extends Command
     public function handle()
     {
 		Sitemap::create()
-			->add(Url::create('/')->setPriority(1.0))
-			->add(Url::create('/upload')->setPriority(0.8)->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY))
-			->add(Url::create('/login')->setPriority(0.8)->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY))
-			->add(Url::create('/register')->setPriority(0.8)->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY))
-			->add(Url::create('/password/reset')->setPriority(0.4)->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY))
+			->add(Url::create('/')->setPriority(1.0)->setChangeFrequency(Url::CHANGE_FREQUENCY_ALWAYS))
+			->add(Url::create('/upload')->setPriority(0.8)->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY))
+			->add(Url::create('/login')->setPriority(0.8)->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY))
+			->add(Url::create('/register')->setPriority(0.8)->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY))
+			->add(Url::create('/password/reset')->setPriority(0.4)->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY))
 			->writeToFile(public_path('pages_sitemap.xml'));
 
 		$games_sitemap = Sitemap::create();
 		Game::all()->each(function (Game $game) use ($games_sitemap) {
-			$games_sitemap->add(Url::create("/game/{$game->slug}")->setPriority(0.9)->setLastModificationDate($game->updated_at)->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY));
+			$games_sitemap->add(Url::create("/game/{$game->slug}")->setPriority(0.9)->setLastModificationDate($game->updated_at)->setChangeFrequency(Url::CHANGE_FREQUENCY_ALWAYS));
 		});
 		$games_sitemap->writeToFile(public_path('games_sitemap.xml'));
 
 		$clips_sitemap = Sitemap::create();
 		Clip::all()->each(function (Clip $clip) use ($clips_sitemap) {
-			$clips_sitemap->add(Url::create("/clip/{$clip->twitch_clip_id}")->setPriority(0.6)->setLastModificationDate($clip->updated_at)->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY));
+			$clips_sitemap->add(Url::create("/clip/{$clip->twitch_clip_id}")->setPriority(0.6)->setLastModificationDate($clip->updated_at)->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY));
 		});
 		$clips_sitemap->writeToFile(public_path('clips_sitemap.xml'));
 
