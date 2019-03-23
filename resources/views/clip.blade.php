@@ -20,7 +20,7 @@
 	<meta property="og:video:type" content="text/html" />
 
 	<meta name="twitter:card" content="player" />
-    <meta name="twitter:site" content="@PBR_Clips" />
+    <meta name="twitter:site" content="@pbrclips" />
     <meta name="twitter:player" content="{{ $clip[0]->embed_url }}" />
     <meta name="twitter:player:width" content="320" />
     <meta name="twitter:player:height" content="180" />

@@ -15,7 +15,7 @@
     <meta name="twitter:image" content="{{ '/storage/' . $game[0]->cover_image }}">
 
 	<meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@PBR_Clips" />
+    <meta name="twitter:site" content="@pbrclips" />
 	<meta name="twitter:creator" content="@CrocBuzz" />
 
 	<meta property="og:locale" content="en">

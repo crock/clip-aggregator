@@ -77,10 +77,10 @@
 			<a href="https://discord.gg/Kb6mT7q">
 				<i class="fab fa-discord"></i> <span>Discord</span>
 			</a>
-			<a href="https://twitter.com/PBR_Clips">
+			<a href="https://twitter.com/pbrclips">
 				<i class="fab fa-twitter"></i> <span>Twitter</span>
 			</a>
-			<a href="https://www.instagram.com/clipping/">
+			<a href="https://www.instagram.com/pbrclips/">
 				<i class="fab fa-instagram"></i> <span>Instagram</span>
 			</a>
 			<a href="https://www.youtube.com/channel/UCIv718h2yHBPBcXhcT6NLTQ">
