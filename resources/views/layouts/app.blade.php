@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="keywords" content="battle royale, twitch clips, gaming clips, clip, video" />
+	<meta name="msvalidate.01" content="4EDF313400B304927B455EAC6922CFFF" />
 
 	<link rel="shortcut icon" href="{{ asset('/favicon.ico') }}" type="image/x-icon" />
 	<link rel="apple-touch-icon" href="{{ asset('/apple-touch-icon.png') }}" />
