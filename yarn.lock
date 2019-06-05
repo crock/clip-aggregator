@@ -7736,6 +7736,25 @@ sass-loader@^6.0.5:
     neo-async "^2.5.0"
     pify "^3.0.0"
 
+sass-loader@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/sass-loader/-/sass-loader-7.1.0.tgz#16fd5138cb8b424bf8a759528a1972d72aad069d"
+  integrity sha512-+G+BKGglmZM2GUSfT9TLuEp6tzehHPjAMoRRItOojWIqIGPloVCMhNIQuG639eJ+y033PaGTSjLaTHts8Kw79w==
+  dependencies:
+    clone-deep "^2.0.1"
+    loader-utils "^1.0.1"
+    lodash.tail "^4.1.1"
+    neo-async "^2.5.0"
+    pify "^3.0.0"
+    semver "^5.5.0"
+
+sass@^1.20.3:
+  version "1.20.3"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.20.3.tgz#18284a7bac6eab9cbb80453288473194f29efb84"
+  integrity sha512-kvf+w5XT7FrmFrCKz1gPHqegufG+gxifC8oQesX/s8gkShdeiTqiuvP0c8TvfBwMAuI1YGOgobZQ2KIJGn//jA==
+  dependencies:
+    chokidar "^2.0.0"
+
 sax@^1.2.4, sax@~1.2.1, sax@~1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
