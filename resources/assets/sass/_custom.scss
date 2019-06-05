@@ -394,18 +394,13 @@ header {
     padding: 15px 10px;
 }
 
-// Discord
-.social-bar a:first-of-type:hover {
-    background: #7289DA;
-}
-
 // Twitter
-.social-bar a:nth-of-type(2):hover {
+.social-bar a:nth-of-type(1):hover {
 	background: #1EA1F3;
 }
 
 // Instagram
-.social-bar a:nth-of-type(3):hover {
+.social-bar a:nth-of-type(2):hover {
 	background: #df5169;
 }
 
