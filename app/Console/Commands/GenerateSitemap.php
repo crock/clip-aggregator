@@ -4,9 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Spatie\Sitemap\Sitemap;
-//use Spatie\Sitemap\SitemapIndex;
+use Spatie\Sitemap\SitemapIndex;
 use Spatie\Sitemap\Tags\Url;
-//use Illuminate\Support\Carbon;
 use App\Clip;
 use App\Game;
 
