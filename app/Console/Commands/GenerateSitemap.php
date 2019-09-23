@@ -43,21 +43,34 @@ class GenerateSitemap extends Command
 
 		$games_sitemap = Sitemap::create();
 		Game::all()->each(function (Game $game) use ($games_sitemap) {
-			$games_sitemap->add(Url::create("/game/{$game->slug}")->setPriority(0.9)->setLastModificationDate($game->updated_at)->setChangeFrequency(Url::CHANGE_FREQUENCY_ALWAYS));
+			$games_sitemap->add(Url::create("/game/{$game->slug}")
+			->setPriority(0.9)
+			->setLastModificationDate($game->updated_at)
+			->setChangeFrequency(Url::CHANGE_FREQUENCY_ALWAYS));
 		});
 		$games_sitemap->writeToFile(public_path('games_sitemap.xml'));
 
-		$clips_sitemap = Sitemap::create();
-		Clip::all()->each(function (Clip $clip) use ($clips_sitemap) {
-			$clips_sitemap->add(Url::create("/clip/{$clip->twitch_clip_id}")->setPriority(0.6)->setLastModificationDate($clip->updated_at)->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY));
+		$clips_index = SitemapIndex::create();
+		Clip::all()->each(function (Clip $clip) use ($clips_index) {
+			$clips_index->add(Url::create("/clip/{$clip->twitch_clip_id}")
+			->setPriority(0.6)
+			->setLastModificationDate($clip->updated_at)
+			->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY));
 		});
-		$clips_sitemap->writeToFile(public_path('clips_sitemap.xml'));
+		$clips_index->maxTagsPerSitemap(50000)->writeToFile(public_path('clips_index.xml'));
 
-		// SitemapIndex::create()
-		// 	->add(Url::create('/pages_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY))
-		// 	->add(Url::create('/games_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY))
-		// 	->add(Url::create('/clips_sitemap.xml')->setLastModificationDate(Carbon::today())->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY))
-		// 	->writeToFile(public_path('sitemap.xml'));
+		SitemapIndex::create()
+			->add(Url::create('/pages_sitemap.xml')
+				->setLastModificationDate(Carbon::today())
+				->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY))
+			->add(Url::create('/games_sitemap.xml')
+				->setLastModificationDate(Carbon::today())
+				->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY))
+			->add(Url::create('/clips_sitemap.xml')
+				->setLastModificationDate(Carbon::today())
+				->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY))
+			->maxTagsPerSitemap(50000)
+			->writeToFile(public_path('sitemap.xml'));
 
     }
 }
