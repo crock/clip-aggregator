@@ -49,14 +49,13 @@ class GenerateSitemap extends Command
 		});
 		$games_sitemap->writeToFile(public_path('games_sitemap.xml'));
 
-		$clips_index = SitemapIndex::create();
+		$clips_index = SitemapIndex::create()->maxTagsPerSitemap(50000)->writeToFile(public_path('clips_index.xml'));
 		Clip::all()->each(function (Clip $clip) use ($clips_index) {
 			$clips_index->add(Url::create("/clip/{$clip->twitch_clip_id}")
 			->setPriority(0.6)
 			->setLastModificationDate($clip->updated_at)
 			->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY));
 		});
-		$clips_index->maxTagsPerSitemap(50000)->writeToFile(public_path('clips_index.xml'));
 
 		SitemapIndex::create()
 			->add(Url::create('/pages_sitemap.xml')
@@ -68,7 +67,6 @@ class GenerateSitemap extends Command
 			->add(Url::create('/clips_sitemap.xml')
 				->setLastModificationDate(Carbon::today())
 				->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY))
-			->maxTagsPerSitemap(50000)
 			->writeToFile(public_path('sitemap.xml'));
 
     }

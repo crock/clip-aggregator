@@ -5,8 +5,10 @@ namespace Laravel\Nova\Actions;
 use Closure;
 use JsonSerializable;
 use Laravel\Nova\Nova;
+use Laravel\Nova\Metable;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Laravel\Nova\AuthorizedToSee;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\ProxiesCanSeeToGate;
 use Laravel\Nova\Http\Requests\ActionRequest;
@@ -14,6 +16,8 @@ use Laravel\Nova\Exceptions\MissingActionHandlerException;
 
 class Action implements JsonSerializable
 {
+    use Metable;
+    use AuthorizedToSee;
     use ProxiesCanSeeToGate;
 
     /**
@@ -73,13 +77,6 @@ class Action implements JsonSerializable
     public $batchId;
 
     /**
-     * The callback used to authorize viewing the action.
-     *
-     * @var \Closure|null
-     */
-    public $seeCallback;
-
-    /**
      * The callback used to authorize running the action.
      *
      * @var \Closure|null
@@ -92,17 +89,6 @@ class Action implements JsonSerializable
      * @var int
      */
     public static $chunkCount = 200;
-
-    /**
-     * Determine if the action should be available for the given request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    public function authorizedToSee(Request $request)
-    {
-        return $this->seeCallback ? call_user_func($this->seeCallback, $request) : true;
-    }
 
     /**
      * Determine if the action is executable for the given request.
@@ -312,19 +298,6 @@ class Action implements JsonSerializable
     }
 
     /**
-     * Set the callback to be run to authorize viewing the action.
-     *
-     * @param  \Closure  $callback
-     * @return $this
-     */
-    public function canSee(Closure $callback)
-    {
-        $this->seeCallback = $callback;
-
-        return $this;
-    }
-
-    /**
      * Set the callback to be run to authorize running the action.
      *
      * @param  \Closure  $callback
@@ -398,7 +371,7 @@ class Action implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        return [
+        return array_merge([
             'component' => $this->component(),
             'destructive' => $this instanceof DestructiveAction,
             'name' => $this->name(),
@@ -409,6 +382,6 @@ class Action implements JsonSerializable
             'onlyOnDetail' => $this->onlyOnDetail,
             'onlyOnIndex' => $this->onlyOnIndex,
             'withoutConfirmation' => $this->withoutConfirmation,
-        ];
+        ], $this->meta());
     }
 }

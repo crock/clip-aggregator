@@ -34,4 +34,18 @@ interface Deletable
      * @return $this
      */
     public function prunable($prunable = true);
+
+    /**
+     * Get the disk that the field is stored on.
+     *
+     * @return string|null
+     */
+    public function getStorageDisk();
+
+    /**
+     * Get the path that the field is stored at on disk.
+     *
+     * @return string|null
+     */
+    public function getStoragePath();
 }

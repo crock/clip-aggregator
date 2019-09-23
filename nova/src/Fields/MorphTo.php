@@ -74,13 +74,6 @@ class MorphTo extends Field
     public $display;
 
     /**
-     * Indicates if the field is nullable.
-     *
-     * @var bool
-     */
-    public $nullable = false;
-
-    /**
      * Indicates if this relationship is searchable.
      *
      * @var bool
@@ -248,13 +241,13 @@ class MorphTo extends Field
             );
         }
 
-        $foreignKey = $model->{$this->attribute}()->getForeignKey();
+        $foreignKey = $model->{$this->attribute}()->getForeignKeyName();
 
         if ($model->isDirty([$morphType, $foreignKey])) {
             $model->unsetRelation($this->attribute);
         }
 
-        parent::fillInto($request, $model, $model->{$this->attribute}()->getForeignKey());
+        parent::fillInto($request, $model, $model->{$this->attribute}()->getForeignKeyName());
     }
 
     /**
@@ -463,19 +456,6 @@ class MorphTo extends Field
     }
 
     /**
-     * Indicate that the field should be nullable.
-     *
-     * @param  bool  $nullable
-     * @return $this
-     */
-    public function nullable($nullable = true)
-    {
-        $this->nullable = $nullable;
-
-        return $this;
-    }
-
-    /**
      * Get additional meta information to merge with the field payload.
      *
      * @return array
@@ -491,7 +471,6 @@ class MorphTo extends Field
             'morphToTypes' => $this->morphToTypes,
             'morphToType' => $this->morphToType,
             'morphToId' => $this->morphToId,
-            'nullable' => $this->nullable,
             'searchable' => $this->searchable,
             'reverse' => $this->isReverseRelation(app(NovaRequest::class)),
         ], $this->meta);

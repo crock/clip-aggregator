@@ -7,6 +7,8 @@ use Illuminate\Http\Resources\MergeValue;
 
 class Panel extends MergeValue implements JsonSerializable
 {
+    use Metable;
+
     /**
      * The name of the panel.
      *
@@ -20,6 +22,11 @@ class Panel extends MergeValue implements JsonSerializable
      * @var array
      */
     public $data;
+
+    /**
+     * The panel's component.
+     */
+    public $component = 'panel';
 
     /**
      * Indicates whether the detail toolbar should be visible on this panel.
@@ -79,16 +86,39 @@ class Panel extends MergeValue implements JsonSerializable
     }
 
     /**
+     * Set the Vue component key for the panel.
+     *
+     * @param string $component
+     * @return $this
+     */
+    public function withComponent($component)
+    {
+        $this->component = $component;
+
+        return $this;
+    }
+
+    /**
+     * Get the Vue component key for the panel.
+     *
+     * @return string
+     */
+    public function component()
+    {
+        return $this->component;
+    }
+
+    /**
      * Prepare the panel for JSON serialization.
      *
      * @return array
      */
     public function jsonSerialize()
     {
-        return [
-            'component' => 'panel',
+        return array_merge([
+            'component' => $this->component(),
             'name' => $this->name,
             'showToolbar' => $this->showToolbar,
-        ];
+        ], $this->meta());
     }
 }

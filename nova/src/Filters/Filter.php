@@ -2,15 +2,19 @@
 
 namespace Laravel\Nova\Filters;
 
-use Closure;
 use JsonSerializable;
 use Laravel\Nova\Nova;
+use Laravel\Nova\Metable;
 use Illuminate\Http\Request;
+use Laravel\Nova\AuthorizedToSee;
 use Illuminate\Container\Container;
 use Laravel\Nova\ProxiesCanSeeToGate;
+use Laravel\Nova\Contracts\Filter as FilterContract;
 
-abstract class Filter implements JsonSerializable
+abstract class Filter implements FilterContract, JsonSerializable
 {
+    use Metable;
+    use AuthorizedToSee;
     use ProxiesCanSeeToGate;
 
     /**
@@ -26,20 +30,6 @@ abstract class Filter implements JsonSerializable
      * @var string
      */
     public $component = 'select-filter';
-
-    /**
-     * The meta data for the filter.
-     *
-     * @var array
-     */
-    public $meta = [];
-
-    /**
-     * The callback used to authorize viewing the filter.
-     *
-     * @var \Closure|null
-     */
-    public $seeCallback;
 
     /**
      * Apply the filter to the given query.
@@ -58,30 +48,6 @@ abstract class Filter implements JsonSerializable
      * @return array
      */
     abstract public function options(Request $request);
-
-    /**
-     * Determine if the filter should be available for the given request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    public function authorizedToSee(Request $request)
-    {
-        return $this->seeCallback ? call_user_func($this->seeCallback, $request) : true;
-    }
-
-    /**
-     * Set the callback to be run to authorize viewing the filter.
-     *
-     * @param  \Closure  $callback
-     * @return $this
-     */
-    public function canSee(Closure $callback)
-    {
-        $this->seeCallback = $callback;
-
-        return $this;
-    }
 
     /**
      * Get the component name for the filter.
@@ -116,34 +82,11 @@ abstract class Filter implements JsonSerializable
     /**
      * Set the default options for the filter.
      *
-     * @return array
+     * @return array|mixed
      */
     public function default()
     {
         return '';
-    }
-
-    /**
-     * Get additional meta information to merge with the filter payload.
-     *
-     * @return array
-     */
-    public function meta()
-    {
-        return $this->meta;
-    }
-
-    /**
-     * Set additional meta information for the filter.
-     *
-     * @param  array  $meta
-     * @return $this
-     */
-    public function withMeta(array $meta)
-    {
-        $this->meta = array_merge($this->meta, $meta);
-
-        return $this;
     }
 
     /**

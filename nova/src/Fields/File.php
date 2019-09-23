@@ -391,7 +391,13 @@ class File extends Field implements DeletableContract
 
         if ($this->isPrunable()) {
             return function () use ($model, $request) {
-                call_user_func($this->deleteCallback, $request, $model);
+                call_user_func(
+                    $this->deleteCallback,
+                    $request,
+                    $model,
+                    $this->getStorageDisk(),
+                    $this->getStoragePath()
+                );
             };
         }
     }
@@ -420,6 +426,26 @@ class File extends Field implements DeletableContract
         $this->downloadsAreEnabled = false;
 
         return $this;
+    }
+
+    /**
+     * Get the disk that the field is stored on.
+     *
+     * @return string|null
+     */
+    public function getStorageDisk()
+    {
+        return $this->disk;
+    }
+
+    /**
+     * Get the path that the field is stored at on disk.
+     *
+     * @return string|null
+     */
+    public function getStoragePath()
+    {
+        return $this->value;
     }
 
     /**
