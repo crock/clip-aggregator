@@ -127,6 +127,46 @@ class ClipController extends Controller
 
 	}
 
+	public function fetch_single_clip_from_twitch_api($id) {
+
+		// Checks to see if ID that is passed into route is a Twitch clip slug
+        if (Regex::match('/[a-zA-Z0-9]+/', $id)->hasMatch()) {
+
+			$qs = array(
+				'id' => $id
+			);
+
+			$response = $this->client->request('get', 'clips', [
+				'query' => $qs,
+				'headers' => [
+					'Client-ID' => ENV('TWITCH_CLIENT_ID')
+				]
+			]);
+
+			$clip = json_decode($response->getBody(), true)['data'][0];
+
+			return $clip;
+
+		}
+
+	}
+
+	public function getTotal() {
+		$data = Clip::all()->count();
+
+		return response()->json(['total' => $data]);
+	}
+
+	public function getClipById(Request $request) {
+		$clip = Clip::where('twitch_clip_id', $request->clipId);
+		if ($clip->exists()) {
+			return response()->json($clip);
+		} else {
+			$data = $this->fetch_single_clip_from_twitch_api($request->clipId);
+			return response()->json($data);
+		}
+	}
+
     public function get_top_clips(Request $request) {
 		$queryParam = strtolower($request->query('game'));
 		$game = new \stdClass;

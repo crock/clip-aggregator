@@ -1,90 +1,109 @@
 <template>
-    <div class="flex flex-wrap">
-        <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4 px-2" :key="obj.id" v-for="obj in fclips">
-            <div class="card">
-                <a :href="'/clip/' + obj.twitch_clip_id"><img class="card-img-top" :src="obj.thumbnail_url" :alt="obj.title"></a>
-                <div class="card-body">
-                    <h5 class="card-title">{{ obj.title }}</h5>
-					<div v-if="fusers" class="creator">Clipped by <a :href="channel(obj.creator_id)">{{ obj.creator_name }}</a></div>
-                </div>
-
-                <span class="view-count">{{ obj.view_count }}</span>
-				<span class="clip-date">{{ date(obj.clip_created_date) }}</span>
-                <span v-if="fusers" class="avatar" :style="'background-image: url(' + avatar(obj.broadcaster_id) + ')'"></span>
-				<span class="broadcaster">{{ obj.broadcaster_name }}</span>
-            </div>
+  <div class="flex flex-wrap">
+    <div
+      v-for="obj in fclips"
+      :key="obj.id"
+      class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4 px-2"
+    >
+      <div class="card">
+        <a :href="'/clip/' + obj.twitch_clip_id"><img
+          class="card-img-top"
+          :src="obj.thumbnail_url"
+          :alt="obj.title"
+        ></a>
+        <div class="card-body">
+          <h5 class="card-title">
+            {{ obj.title }}
+          </h5>
+          <div
+            v-if="fusers"
+            class="creator"
+          >
+            Clipped by <a :href="channel(obj.creator_id)">{{ obj.creator_name }}</a>
+          </div>
         </div>
+
+        <span class="view-count">{{ obj.view_count }}</span>
+        <span class="clip-date">{{ date(obj.clip_created_date) }}</span>
+        <span
+          v-if="fusers"
+          class="avatar"
+          :style="'background-image: url(' + avatar(obj.broadcaster_id) + ')'"
+        />
+        <span class="broadcaster">{{ obj.broadcaster_name }}</span>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-    export default {
-		props: {
-			game: {
-				type: String,
-				default: 'random'
-			}
+export default {
+	props: {
+		game: {
+			type: String,
+			default: 'random'
+		}
+	},
+	data() {
+		return {
+			fclips: null,
+			fusers: null
+		}
+	},
+	computed: {
+		idqs: function () {
+			let idList = []
+			this.fclips.forEach(function (clip) {
+				idList.push(clip.broadcaster_id)
+				idList.push(clip.creator_id)
+			})
+			return `?id=${idList.join()}`
 		},
-        data() {
-            return {
-				fclips: null,
-				fusers: null
-            }
-        },
-        methods: {
-            async getClips() {
-				try {
-					const response = await window.axios.get('/api/clips/top' + `?game=${this.game}`)
-					this.fclips = response.data
-					this.getUsers()
-				} catch (e) {
-					console.error(e);
-				}
-			},
-			async getUsers() {
-				try {
-					const response = await window.axios.get('/api/users/twitch' + this.idqs);
-					this.fusers = response.data.data
-				} catch (e) {
-					console.error(e);
-				}
-			},
-			avatar(id) {
-				return this.userInfo[id][1]
-			},
-			channel(id) {
-				return `https://www.twitch.tv/${this.userInfo[id][0]}`
-			},
-			date(createdDate) {
-				return window.moment.utc(createdDate).fromNow()
-			}
-		},
-		computed: {
-			idqs: function () {
-				let idList = []
-				this.fclips.forEach(function (clip) {
-					idList.push(clip.broadcaster_id)
-					idList.push(clip.creator_id)
-				})
-				return `?id=${idList.join()}`
-			},
-			userInfo: function () {
+		userInfo: function () {
 
-				return this.fusers.reduce(function(r, a) {
-					r[a.id] = r[a.id] || [];
-					r[a.id].push(a.login, a.profile_image_url)
-					return r;
-				}, {})
+			return this.fusers.reduce(function(r, a) {
+				r[a.id] = r[a.id] || []
+				r[a.id].push(a.login, a.profile_image_url)
+				return r
+			}, {})
 
+		}
+	},
+	created() {
+		this.getClips()
+	},
+	mounted() {
+		console.log('Component mounted.')
+	},
+	methods: {
+		async getClips() {
+			try {
+				const response = await window.axios.get('/api/clips/top' + `?game=${this.game}`)
+				this.fclips = response.data
+				this.getUsers()
+			} catch (e) {
+				console.error(e)
 			}
 		},
-        created() {
-			this.getClips()
-        },
-        mounted() {
-            console.log('Component mounted.')
-        }
-    }
+		async getUsers() {
+			try {
+				const response = await window.axios.get('/api/users/twitch' + this.idqs)
+				this.fusers = response.data.data
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		avatar(id) {
+			return this.userInfo[id][1]
+		},
+		channel(id) {
+			return `https://www.twitch.tv/${this.userInfo[id][0]}`
+		},
+		date(createdDate) {
+			return window.moment.utc(createdDate).fromNow()
+		}
+	}
+}
 </script>
 
 <style lang="scss" scoped>

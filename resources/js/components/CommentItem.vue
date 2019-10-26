@@ -1,42 +1,54 @@
 <template>
   <div>
     <div class="flex justify-between mb-1">
-      <p class="text-grey-darkest leading-normal text-lg">{{comment.body}}</p>
+      <p class="text-grey-darkest leading-normal text-lg">
+        {{ comment.body }}
+      </p>
       <button
-        class="ml-2 mt-1 mb-auto text-blue hover:text-blue-dark text-sm"
         v-if="editable"
+        class="ml-2 mt-1 mb-auto text-blue hover:text-blue-dark text-sm"
         @click="state = 'editing'"
-      >Edit</button>
+      >
+        Edit
+      </button>
     </div>
     <div class="text-grey-dark leading-normal text-sm">
       <p>
-        {{comment.author.name}}
+        {{ comment.author.name }}
         <span class="mx-1 text-xs">•</span>
         {{ comment.created_at }}
       </p>
     </div>
     <div v-show="state === 'editing'">
       <div class="mb-3">
-        <h3 class="text-black text-xl">Update Comment</h3>
+        <h3 class="text-black text-xl">
+          Update Comment
+        </h3>
       </div>
       <textarea
         v-model="data.body"
         placeholder="Update comment"
         class="bg-grey-lighter rounded leading-normal resize-none w-full h-24 py-2 px-3"
-      ></textarea>
+      />
       <div class="flex flex-col md:flex-row items-center mt-2">
         <button
           class="border border-blue bg-blue text-white hover:bg-blue-dark py-2 px-4 rounded tracking-wide mb-2 md:mb-0 md:mr-1"
           @click="saveEdit"
-        >Update</button>
+        >
+          Update
+        </button>
         <button
           class="border border-grey-darker text-grey-darker hover:bg-grey-dark hover:text-white py-2 px-4 rounded tracking-wide mb-2 md:mb-0 md:ml-1"
           @click="resetEdit"
-        >Cancel</button>
+        >
+          Cancel
+        </button>
         <button
           class="text-red hover:bg-red hover:text-white py-2 px-4 rounded tracking-wide mb-2 md:mb-0 md:ml-auto"
           @click="deleteComment"
-        >Delete</button>
+        >
+          Delete
+        </button>
       </div>
     </div>
   </div>
@@ -44,52 +56,52 @@
 
 <script>
 export default {
-  props: {
-    comment: {
-      required: true,
-      type: Object
+	props: {
+		comment: {
+			required: true,
+			type: Object
+		},
+		user: {
+			default: null,
+			required: false,
+			type: Object
+		}
 	},
-	user: {
-      default: null,
-      required: false,
-      type: Object
-	}
-  },
-  data: function() {
-    return {
-      state: "default",
-      data: {
-		body: this.comment.body
-      }
-    };
-  },
-  computed: {
-    editable() {
-      if (this.user != null) {
-        return this.user.id === this.comment.author.id;
-      } else {
-        return false;
-      }
-    }
-  },
-  methods: {
-    resetEdit() {
-      this.state = "default";
-      this.data.body = this.comment.body;
-    },
-    saveEdit() {
-      this.state = "default";
+	data: function() {
+		return {
+			state: 'default',
+			data: {
+				body: this.comment.body
+			}
+		}
+	},
+	computed: {
+		editable() {
+			if (this.user != null) {
+				return this.user.id === this.comment.author.id
+			} else {
+				return false
+			}
+		}
+	},
+	methods: {
+		resetEdit() {
+			this.state = 'default'
+			this.data.body = this.comment.body
+		},
+		saveEdit() {
+			this.state = 'default'
 
-      this.$emit("comment-updated", {
-        id: this.comment.id,
-		body: this.data.body
-      });
-    },
-    deleteComment() {
-      this.$emit("comment-deleted", {
-        id: this.comment.id
-      });
-    }
-  }
-};
+			this.$emit('comment-updated', {
+				id: this.comment.id,
+				body: this.data.body
+			})
+		},
+		deleteComment() {
+			this.$emit('comment-deleted', {
+				id: this.comment.id
+			})
+		}
+	}
+}
 </script>
