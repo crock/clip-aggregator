@@ -157,12 +157,12 @@ class ClipController extends Controller
 		return response()->json(['total' => $data]);
 	}
 
-	public function getClipById(Request $request) {
-		$clip = Clip::where('twitch_clip_id', $request->clipId);
+	public function getClipById($clipId) {
+		$clip = Clip::where('twitch_clip_id', $clipId)->first();
 		if ($clip->exists()) {
 			return response()->json($clip);
 		} else {
-			$data = $this->fetch_single_clip_from_twitch_api($request->clipId);
+			$data = $this->fetch_single_clip_from_twitch_api($clipId);
 			return response()->json($data);
 		}
 	}
