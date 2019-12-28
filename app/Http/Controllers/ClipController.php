@@ -152,7 +152,7 @@ class ClipController extends Controller
 	}
 
 	public function getTotal() {
-		$data = Clip::all()->count();
+		$data = Clip::count();
 
 		return response()->json(['total' => $data]);
 	}

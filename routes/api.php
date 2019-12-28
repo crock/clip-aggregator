@@ -19,7 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/clips/all', function () {
     return App\Clip::simplePaginate(100);
-});
+}); 
+
 Route::get('/clips/total', 'ClipController@getTotal');
 Route::get('/clips/top', 'ClipController@get_top_clips');
 Route::get('/clips/random', 'ClipController@get_random_clips');
