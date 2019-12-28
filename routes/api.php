@@ -17,7 +17,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('clips/total', 'ClipController@getTotal');
+Route::get('/clips/all', 'ClipController@get_all_clips');
+Route::get('/clips/total', 'ClipController@getTotal');
 Route::get('/clips/top', 'ClipController@get_top_clips');
 Route::get('/clips/random', 'ClipController@get_random_clips');
 Route::get('/clips/{clipId}', 'ClipController@getClipById');
