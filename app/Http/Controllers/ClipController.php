@@ -198,10 +198,4 @@ class ClipController extends Controller
 
 		return response()->json($clips);
 	}
-
-	public function get_all_clips() {
-		$clips = Clip::all()->simplePaginate(100);;
-
-		return response()->json($clips);
-	}
 }
