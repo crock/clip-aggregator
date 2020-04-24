@@ -11,8 +11,8 @@
         "fideloper/proxy": "^4.0",
         "google/cloud-videointelligence": "^1.3",
         "guzzlehttp/guzzle": "~6.0",
-        "laravel/framework": "5.8.*",
-        "laravel/nova": "2.0.x-dev",
+        "laravel/framework": "^6.0",
+        "laravel/helpers": "^1.2",
         "laravel/tinker": "^1.0",
         "spatie/laravel-sitemap": "^5.4",
         "spatie/regex": "^1.3"
@@ -55,9 +55,7 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover"
         ],
-        "post-update-cmd": [
-            "@php artisan nova:publish"
-        ]
+        "post-update-cmd": []
     },
     "config": {
         "preferred-install": "dist",
@@ -65,11 +63,5 @@
         "optimize-autoloader": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "path",
-            "url": "./nova"
-        }
-    ]
+    "prefer-stable": true
 }
