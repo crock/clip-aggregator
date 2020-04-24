@@ -20,6 +20,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
 		\App\Http\Middleware\TrustProxies::class,
         \App\Http\Middleware\StripTags::class,
+		\Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
@@ -38,11 +39,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-        'api' => [
-            'throttle:60,1',
-            'bindings',
-            \Barryvdh\Cors\HandleCors::class,
-        ],
+        'api' => [],
     ];
 
     /**
