@@ -69,7 +69,8 @@ class FetchFreshClips extends Command
 			$response = $client->request('get', 'clips', [
 				'query' => $qs,
 				'headers' => [
-					'Client-ID' => ENV('TWITCH_CLIENT_ID')
+          'Client-ID' => ENV('TWITCH_CLIENT_ID'),
+          'Authorization' => "Bearer " . ENV('TWITCH_CLIENT_SECRET')
 				]
 			]);
 
