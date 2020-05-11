@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client as HttpClient;
 use Spatie\Regex\Regex;
+use TRegx\CleanRegex\Pattern;
 use App\Clip;
 use App\Game;
 use DB;
@@ -79,13 +80,13 @@ class ClipController extends Controller
 
 		$slug = "";
 
-		$patt1 = "/^https?:\/\/www\.twitch\.tv\/[a-zA-Z0-9_]+\/clip\/([a-zA-Z0-9]+)/";
-		$patt2 = "/^https?:\/\/clips\.twitch\.tv\/([a-zA-Z0-9]+)/";
+		$patt1 = '^https?://www\.twitch\.tv/[a-zA-Z0-9_]+/clip/([a-zA-Z0-9]+)';
+		$patt2 = '^https?://clips\.twitch\.tv/([a-zA-Z0-9]+)/';
 
-		if (Regex::match($patt1, $request->url)->hasMatch()) {
-			$slug = Regex::match($patt1, $request->url)->group(1);
-		} else if (Regex::match($patt2, $request->url)->hasMatch()) {
-			$slug = Regex::match($patt2, $request->url)->group(1);
+		if (Pattern::of($patt1)->test($request->url)) {
+			$slug = Pattern::of($patt1)->match($request->url)->group(1)->first();
+		} else if (Pattern::of($patt2)->test($request->url)) {
+			$slug = Pattern::of($patt2)->match($request->url)->group(1)->first();
 		}
 
 		$data = $this->fetch_clip_details($slug);
@@ -106,7 +107,7 @@ class ClipController extends Controller
 	public function fetch_clip_details($id) {
 
 		// Checks to see if ID that is passed into route is a Twitch clip slug
-        if (Regex::match('/[a-zA-Z0-9]+/', $id)->hasMatch()) {
+        if (Pattern::of('[a-zA-Z0-9]+')->test($id)) {
 
 			$qs = array(
 				'id' => $id
@@ -131,7 +132,7 @@ class ClipController extends Controller
 	public function fetch_single_clip_from_twitch_api($id) {
 
 		// Checks to see if ID that is passed into route is a Twitch clip slug
-        if (Regex::match('/[a-zA-Z0-9]+/', $id)->hasMatch()) {
+        if (Pattern::of('[a-zA-Z0-9]+')->test($id)) {
 
 			$qs = array(
 				'id' => $id
